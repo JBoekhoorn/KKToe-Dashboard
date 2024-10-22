@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inschrijvingen Beheren - KKTOE</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Stijlen voor de pagina */
+        body {
+            display: flex;
+            flex-direction: column; /* Maakt de header, containers en footer verticaal */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f2f2f2; /* Achtergrondkleur voor de hele pagina */
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            margin-left: 20px;
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .main-container {
+            display: flex; /* Plaatst containers naast elkaar */
+            justify-content: center; /* Centreert de containers horizontaal */
+            padding: 20px;
+            flex: 1; /* Laat de main-container de beschikbare ruimte vullen */
+            max-width: 1200px; /* Max breedte voor de pagina */
+            margin: 0 auto; /* Centreert de pagina */
+        }
+
+        .combined-container {
+            display: flex; /* Plaatst de containers naast elkaar */
+            justify-content: space-between; /* Ruimte tussen de containers */
+            width: 100%; /* Neemt volledige breedte van de hoofdcontainer in */
+        }
+
+        .container {
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9; /* Lichte achtergrondkleur */
+            margin: 10px; /* Ruimte tussen de containers */
+            box-sizing: border-box; /* Zorgt ervoor dat padding binnen de breedte valt */
+        }
+
+        .inschrijvingen-container {
+            min-width: 300px; /* Minimale breedte */
+            max-width: 400px; /* Max breedte om het consistent te houden */
+        }
+
+        .middle-container {
+            min-width: 600px; /* Minimale breedte voor de middelste container */
+            max-width: 600px; /* Max breedte om niet te groot te worden */
+        }
+
+        .existing-diensten-container {
+            min-width: 800px; /* Minimale breedte voor bestaande diensten container */
+            max-width: 800px; /* Max breedte om niet te groot te worden */
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50; /* Groene achtergrondkleur */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049; /* Donkerder groen bij hover */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50; /* Groene kleur voor de header */
+            color: white;
+            font-size: 16px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Lichte achtergrond voor even rijen */
+        }
+
+        td {
+            background-color: white; /* Witte achtergrond voor de cellen */
+            font-size: 14px;
+        }
+
+        .delete-button {
+            background-color: #f44336; /* Rode kleur voor de verwijderknop */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: #d32f2f; /* Donkerder rood bij hover */
+        }
+
+        .edit-button {
+            background-color: #008CBA; /* Blauw voor de bewerken knop */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-button:hover {
+            background-color: #007B9A; /* Donkerder blauw bij hover */
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #000000;
+            padding: 10px 0; /* Padding voor de footer */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/admin-dashboard" class="account-button">
+                <img src="/images/back.png" alt="Terug" class="profile-pic">
+                Terug naar Admin dashboard
+            </a>
+            <h1>Nieuwe inschrijving aanmaken</h1>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="combined-container">
+            <div class="inschrijvingen-container container">
+                <!-- Formulier voor het aanmaken van een nieuwe inschrijving -->
+                <form id="inschrijvingForm" action="/inschrijving-toevoegen" method="POST">
+                    <label for="datum">Datum:</label>
+                    <input type="date" id="datum" name="datum" required>
+
+                    <label for="activiteit">Activiteit:</label>
+                    <input type="text" id="activiteit" name="activiteit" required>
+
+                    <label for="soort_dienst">Soort Dienst:</label>
+                    <select id="soort_dienst" name="soort_dienst" required>
+                        <option value="">Selecteer een soort dienst</option>
+                        <option value="Techniek - FOH Geluid">Techniek - FOH Geluid</option>
+                        <option value="Techniek - FOH Licht">Techniek - FOH Licht</option>
+                        <option value="Techniek - Stagehand">Techniek - Stagehand</option>
+                        <option value="KKToe - Algemeen">KKToe - Algemeen</option>
+                        <option value="KKToe - Horeca">KKToe - Horeca</option>
+                    </select>
+
+                    <label for="aanvang">Aanvang:</label>
+                    <input type="time" id="aanvang" name="aanvang" required>
+
+                    <label for="einde">Einde:</label>
+                    <input type="time" id="einde" name="einde" required>
+
+                    <button type="submit">Inschrijving Toevoegen</button>
+                </form>
+            </div>
+
+            <div class="middle-container container">
+                <!-- Lege container -->
+                <h2>Lege Container</h2>
+                <p>Hier kan eventueel extra informatie komen.</p>
+            </div>
+
+            <div class="existing-diensten-container container">
+                <!-- Tabel met bestaande diensten -->
+                <h2>Bestaande Inschrijvingen</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Activiteit</th>
+                            <th>Soort Dienst</th>
+                            <th>Aanvang</th>
+                            <th>Einde</th>
+                            <th>Acties</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (inschrijvingen && inschrijvingen.length > 0) { %>
+                            <% inschrijvingen.forEach(inschrijving => { %>
+                                <tr id="inschrijving-<%= inschrijving.id %>">
+                                    <td>
+                                        <%
+                                            const date = new Date(inschrijving.datum);
+                                            const day = String(date.getDate()).padStart(2, '0');
+                                            const month = String(date.getMonth() + 1).padStart(2, '0'); // Maanden zijn 0-gebaseerd
+                                            const year = date.getFullYear();
+                                            const formattedDate = `${day}/${month}/${year}`;
+                                        %>
+                                        <%= formattedDate %>
+                                    </td>
+                                    <td><%= inschrijving.activiteit %></td>
+                                    <td><%= inschrijving.soort_dienst %></td>
+                                    <td>
+                                        <%
+                                            const timeStart = new Date(`1970-01-01T${inschrijving.aanvang}`);
+                                            const formattedTimeStart = timeStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                        %>
+                                        <%= formattedTimeStart %>
+                                    </td>
+                                    <td>
+                                        <%
+                                            const timeEnd = new Date(`1970-01-01T${inschrijving.einde}`);
+                                            const formattedTimeEnd = timeEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                        %>
+                                        <%= formattedTimeEnd %>
+                                    </td>
+                                    <td>
+                                        <button class="delete-button" type="button" onclick="verwijderInschrijving('<%= inschrijving.id %>')">Verwijderen</button>
+                                        <a href="/inschrijving-bewerken/<%= inschrijving.id %>" class="edit-button">Bewerken</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="6">Geen inschrijvingen gevonden</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Mijn KKTOE. Alle rechten voorbehouden.</p>
+    </footer>
+
+    <script>
+        // Functie om inschrijving te verwijderen
+        function verwijderInschrijving(inschrijvingId) {
+            if (confirm('Weet je zeker dat je deze inschrijving wilt verwijderen?')) {
+                fetch(`/inschrijvingen-verwijderen/${inschrijvingId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById(`inschrijving-${inschrijvingId}`).remove();
+                        alert('Inschrijving succesvol verwijderd.');
+                    } else {
+                        alert('Er is een fout opgetreden bij het verwijderen van de inschrijving.');
+                    }
+                })
+                .catch(error => console.error('Fout:', error));
+            }
+        }
+    </script>
+</body>
+</html>

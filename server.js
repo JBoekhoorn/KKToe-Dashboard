@@ -388,6 +388,70 @@ app.get('/inschrijvingen', (req, res) => {
         });
 });
 
+//Route voor het bekijken van alle inschrijvingen die zijn ingeschreven
+app.get('/ingeschreven-diensten', async (req, res) => {
+    try {
+        const sql = `
+        SELECT diensten.id, diensten.datum, diensten.activiteit, diensten.soort_dienst, 
+               diensten.aanvang, diensten.einde, users.naam 
+        FROM diensten 
+        JOIN users ON diensten.user_id = users.id
+        WHERE diensten.user_id IS NOT NULL
+        ORDER BY diensten.datum ASC
+    `;    
+
+        const [results] = await db.query(sql);
+        res.render('ingeschreven-diensten', { diensten: results });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+});
+
+// Route om inschrijvingen te beheren
+app.get('/inschrijvingen-beheren', async (req, res) => {
+    try {
+        // SQL-query om alle inschrijvingen op te halen
+        const [results] = await db.query('SELECT id, datum, activiteit, soort_dienst, aanvang, einde FROM diensten');
+
+        // Render de EJS-pagina en stuur de inschrijvingen mee
+        res.render('inschrijvingen-beheren', { inschrijvingen: results });
+    } catch (err) {
+        console.error('Fout bij ophalen van inschrijvingen:', err);
+        res.status(500).send('Fout bij ophalen van inschrijvingen');
+    }
+});
+
+// Route om een nieuwe inschrijving toe te voegen
+app.post('/inschrijving-toevoegen', (req, res) => {
+    const { datum, activiteit, soort_dienst, aanvang, einde, notities } = req.body;
+
+    // Voeg de inschrijving toe aan de database
+    db.query('INSERT INTO inschrijvingen (datum, activiteit, soort_dienst, aanvang, einde, notities) VALUES (?, ?, ?, ?, ?, ?)', 
+    [datum, activiteit, soort_dienst, aanvang, einde, notities], 
+    (error, results) => {
+        if (error) {
+            return res.status(500).send('Fout bij het toevoegen van inschrijving.');
+        }
+        res.redirect('/inschrijving-beheren'); // Redirect na toevoeging
+    });
+});
+
+// Route om een inschrijving te verwijderen
+app.post('/inschrijvingen-verwijderen', async (req, res) => {
+    const { inschrijving_id } = req.body;
+
+    try {
+        const sql = 'DELETE FROM diensten WHERE id = ?';
+        const [result] = await db.query(sql, [inschrijving_id]);
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Fout bij verwijderen van inschrijving:', err);
+        res.status(500).json({ success: false, error: 'Fout bij verwijderen van inschrijving' });
+    }
+});
+
 // Rooster diensten ophalen uit de diensten tabel
 app.get('/rooster', async (req, res) => {
     try {

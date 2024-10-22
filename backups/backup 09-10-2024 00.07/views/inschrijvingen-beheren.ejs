@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inschrijvingen Beheren</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        table {
+            width: 100%; /* Tabel neemt de volledige breedte in */
+            border-collapse: collapse; /* Zorgt voor een nette uitstraling */
+            margin-top: 20px; /* Ruimte boven de tabel */
+        }
+        th, td {
+            border: 1px solid #ccc; /* Rand voor cellen */
+            padding: 10px; /* Padding in cellen */
+            text-align: left; /* Tekst uitlijnen naar links */
+        }
+        th {
+            background-color: #4CAF50; /* Achtergrondkleur voor header */
+            color: white; /* Witte tekstkleur */
+        }
+        .button-container {
+            margin-top: 20px; /* Ruimte boven de knoppen */
+        }
+        .button {
+            background-color: #4CAF50; /* Groene achtergrond voor knoppen */
+            color: white; /* Witte tekstkleur */
+            padding: 10px 20px; /* Padding voor knoppen */
+            border: none; /* Geen rand */
+            border-radius: 5px; /* Afgeronde hoeken voor knoppen */
+            cursor: pointer; /* Wijzig de cursor naar een handje */
+            text-decoration: none; /* Verwijder onderstreping */
+            display: inline-block; /* Zorgt dat de knoppen netjes naast elkaar staan */
+        }
+        .button:hover {
+            background-color: #45a049; /* Donkerdere groene kleur bij hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/admin-dashboard" class="account-button">
+                <img src="/images/back.png" alt="Terug" class="profile-pic">
+                Terug naar Dashboard
+            </a>
+            <h1>Inschrijvingen Beheren</h1>
+        </div>
+    </header>
+
+    <div class="button-container">
+        <a href="/inschrijvingen" class="button">Bekijk Inschrijvingen</a>
+        <a href="/nieuw-inschrijving" class="button">Nieuwe Inschrijving</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Inschrijving ID</th>
+                <th>Naam</th>
+                <th>Activiteit</th>
+                <th>Datum</th>
+                <th>Status</th>
+                <th>Acties</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% inschrijvingen.forEach(inschrijving => { %>
+                <tr>
+                    <td><%= inschrijving.id %></td>
+                    <td><%= inschrijving.naam %></td>
+                    <td><%= inschrijving.activiteit %></td>
+                    <td><%= new Date(inschrijving.datum).toLocaleDateString('nl-NL') %></td>
+                    <td><%= inschrijving.status %></td>
+                    <td>
+                        <a href="/inschrijving/bewerken/<%= inschrijving.id %>" class="button">Bewerken</a>
+                        <form action="/inschrijving/verwijderen/<%= inschrijving.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="button" style="background-color: #f44336;">Verwijderen</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <footer>
+        <p>© 2024 Mijn KKTOE. Alle rechten voorbehouden.</p>
+    </footer>
+</body>
+</html>

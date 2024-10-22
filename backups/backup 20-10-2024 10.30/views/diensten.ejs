@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1><%= title %></h1>
+        <a href="/admin-dashboard">Terug naar dashboard</a>
+    </header>
+    <form action="/diensten" method="POST">
+        <h2>Nieuwe Dienst Toevoegen</h2>
+        <label>Activiteit:</label>
+        <input type="text" name="activiteit" required>
+        <label>Afdeling:</label>
+        <input type="text" name="afdeling" required>
+        <label>Soort Dienst:</label>
+        <input type="text" name="soort_dienst" required>
+        <label>Aanvang:</label>
+        <input type="time" name="aanvang" required>
+        <label>Einde:</label>
+        <input type="time" name="einde" required>
+        <button type="submit">Voeg Dienst Toe</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Activiteit</th>
+                <th>Afdeling</th>
+                <th>Soort Dienst</th>
+                <th>Aanvang</th>
+                <th>Einde</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% diensten.forEach(dienst => { %>
+                <tr>
+                    <td><%= dienst.activiteit %></td>
+                    <td><%= dienst.afdeling %></td>
+                    <td><%= dienst.soort_dienst %></td>
+                    <td><%= dienst.aanvang %></td>
+                    <td><%= dienst.einde %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        table {
+            width: 100%; /* Tabel neemt de volledige breedte in */
+            border-collapse: collapse; /* Zorgt voor een nette uitstraling */
+            margin-top: 20px; /* Ruimte boven de tabel */
+        }
+        th, td {
+            border: 1px solid #ccc; /* Rand voor cellen */
+            padding: 10px; /* Padding in cellen */
+            text-align: left; /* Tekst uitlijnen naar links */
+        }
+        th {
+            background-color: #4CAF50; /* Achtergrondkleur voor header */
+            color: white; /* Witte tekstkleur */
+        }
+        /* Stijl voor de knop */
+        .button-container {
+            margin: 20px 0; /* Ruimte boven en onder de knop */
+            text-align: right; /* Knop rechts uitlijnen */
+        }
+        .button {
+            background-color: #4CAF50; /* Groene achtergrond voor knoppen */
+            color: white; /* Witte tekstkleur */
+            border: none; /* Geen rand */
+            padding: 5px 10px; /* Kleinere padding voor kleinere knop */
+            border-radius: 5px; /* Afgeronde hoeken voor knoppen */
+            cursor: pointer; /* Wijzig de cursor naar een handje */
+            font-size: 14px; /* Kleinere tekst voor knoppen */
+        }
+        .button:hover {
+            background-color: #45a049; /* Donkerdere groene kleur bij hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/dashboard" class="account-button">
+                <img src="/images/back.png" alt="Terug" class="profile-pic">
+                Terug naar Dashboard
+            </a>
+            <h1><%= title %></h1>
+        </div>
+    </header>
+
+    <div class="button-container">
+        <a href="/gebruiker-aanmaken" class="button">Nieuwe Gebruiker Aanmaken</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Naam</th> <!-- Nieuwe kolom voor naam -->
+                <th>Telefoonnummer</th> <!-- Nieuwe kolom voor telefoonnummer -->
+                <th>Klas</th> <!-- Nieuwe kolom voor klas -->
+                <th>Coach</th> <!-- Nieuwe kolom voor coach -->
+                <!-- Voeg hier extra kolommen toe indien nodig -->
+            </tr>
+        </thead>
+        <tbody>
+            <% gebruikers.forEach(gebruiker => { %>
+                <tr>
+                    <td><%= gebruiker.email %></td>
+                    <td><%= gebruiker.role %></td>
+                    <td><%= gebruiker.naam %></td> <!-- Nieuwe gegevens voor naam -->
+                    <td><%= gebruiker.telefoonnummer || 'N/A' %></td> <!-- Telefoonnummer met standaardwaarde -->
+                    <td><%= gebruiker.klas || 'N/A' %></td> <!-- Klas met standaardwaarde -->
+                    <td><%= gebruiker.coach || 'N/A' %></td> <!-- Coach met standaardwaarde -->
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <footer>
+        <p>© 2024 Mijn KKTOE. Alle rechten voorbehouden.</p>
+    </footer>
+</body>
+</html>

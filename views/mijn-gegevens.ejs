@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijn Gegevens - KKTOE</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Headerstijl */
+        header {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            margin-left: 20px;
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .gegevens-container {
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"] {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 99%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .logout-button {
+            background-color: #f44336;
+        }
+
+        .logout-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/dashboard" class="account-button">
+                <img src="/images/back.png" alt="Terug" class="profile-pic">
+                Terug naar dashboard
+            </a>
+            <h1>Mijn Gegevens</h1>
+        </div>
+    </header>
+
+    <div class="gegevens-container">
+        <section class="user-info">
+            <h2>Persoonlijke Informatie</h2>
+            <form action="/update-gegevens" method="POST">
+                <label for="username">Naam:</label>
+                <input type="text" id="username" name="username" value="<%= user.username %>" disabled>
+
+                <label for="class">Klas:</label>
+                <input type="text" id="class" name="class" value="<%= user.class %>" required>
+
+                <label for="teacher">Coach:</label>
+                <input type="text" id="teacher" name="teacher" value="<%= user.teacher %>" required>
+
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" value="<%= user.email %>" required>
+
+                <label for="phone">Telefoonnummer:</label>
+                <input type="tel" id="phone" name="phone" value="<%= user.phone %>">
+
+                <label for="password">Nieuw wachtwoord (optioneel):</label>
+                <input type="password" id="password" name="password">
+
+                <button type="submit">Wijzigingen opslaan</button>
+            </form>
+        </section>
+
+        <section class="logout">
+            <form action="/logout" method="POST">
+                <button type="submit" class="logout-button">Uitloggen</button>
+            </form>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2024 Mijn KKTOE. Alle rechten voorbehouden.</p>
+    </footer>
+</body>
+</html>

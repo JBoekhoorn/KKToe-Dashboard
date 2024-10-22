@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nieuwe Gebruiker Aanmaken</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Formulier stijlen */
+        .form-container {
+            padding: 20px;
+            max-width: 500px; /* Max breedte voor de container */
+            margin: 40px auto; /* Center de container horizontaal */
+            border: 1px solid #ddd; /* Rand om de container */
+            border-radius: 8px; /* Afgeronde hoeken */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
+            background-color: #f9f9f9; /* Achtergrondkleur van de container */
+        }
+
+        label {
+            display: block; /* Labels in nieuwe regel */
+            margin-bottom: 5px; /* Ruimte onder de labels */
+            font-weight: bold; /* Vetgedrukte labels */
+            color: #555; /* Donkerdere kleur voor labels */
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"] {
+            width: 100%; /* Volledige breedte van het invoerveld */
+            padding: 10px; /* Padding voor invoervelden */
+            margin-bottom: 15px; /* Ruimte onder de invoervelden */
+            border: 1px solid #ccc; /* Rand van de invoervelden */
+            border-radius: 5px; /* Afgeronde hoeken voor invoervelden */
+            font-size: 16px; /* Grotere tekst */
+            transition: border-color 0.3s; /* Animatie voor randkleur */
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="password"]:focus {
+            border-color: #4CAF50; /* Groen wanneer geselecteerd */
+            outline: none; /* Verwijder de standaard focusstijl */
+        }
+
+        button {
+            background-color: #4CAF50; /* Groene achtergrond voor knoppen */
+            color: white; /* Witte tekstkleur */
+            border: none; /* Geen rand */
+            padding: 10px 20px; /* Padding voor knoppen */
+            border-radius: 5px; /* Afgeronde hoeken voor knoppen */
+            cursor: pointer; /* Wijzig de cursor naar een handje */
+            font-size: 16px; /* Grotere tekst voor knoppen */
+            width: 100%; /* Knoppen nemen de volledige breedte in */
+            transition: background-color 0.3s; /* Animatie voor achtergrondkleur */
+        }
+
+        button:hover {
+            background-color: #45a049; /* Donkerdere groene kleur bij hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/gebruikers" class="account-button">
+                <img src="/images/back.png" alt="Terug" class="profile-pic">
+                Terug naar Gebruiker beheer
+            </a>
+            <h1>Nieuwe Gebruiker Aanmaken</h1>
+        </div>
+    </header>
+
+    <div class="form-container">
+        <form action="/gebruiker-aanmaken" method="POST">
+            <input type="text" name="email" placeholder="E-mail" required>
+            <input type="password" name="password" placeholder="Wachtwoord" required>
+            <input type="text" name="role" placeholder="Rol" required>
+            <input type="text" name="naam" placeholder="Naam" required>
+            <input type="text" name="klas" placeholder="Klas">
+            <input type="text" name="coach" placeholder="Coach">
+            <input type="text" name="telefoonnummer" placeholder="Telefoonnummer">
+            <input type="text" name="username" placeholder="Gebruikersnaam" required>
+            <button type="submit">Voeg Gebruiker Toe</button>
+        </form>        
+    </div>
+
+    <footer>
+        <p>© 2024 Mijn KKTOE. Alle rechten voorbehouden.</p>
+    </footer>
+</body>
+</html>

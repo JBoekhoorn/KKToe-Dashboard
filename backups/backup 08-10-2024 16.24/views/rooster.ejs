@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooster - KKTOE</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eb6209;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-bottom: 20px; /* Ruimte onder de header toegevoegd */
+        }
+
+        .header-content h1 {
+            margin-left: 20px; /* Ruimte tussen de terugknop en de titel */
+            margin: 0; /* Verwijder standaard marges */
+            font-size: 24px; /* Grotere titel */
+            color: #333; /* Donkerdere kleur voor de titel */
+        }
+
+        .gegevens-container {
+            padding: 20px;
+            max-width: 600px; /* Max breedte voor de container */
+            margin: 20px auto; /* Center de container horizontaal */
+            border: 1px solid #ddd; /* Rand om de container */
+            border-radius: 8px; /* Afgeronde hoeken */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
+            background-color: #f9f9f9; /* Achtergrondkleur van de container */
+        }
+
+        .rooster-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px; /* Meer padding voor de container */
+            border-radius: 15px; /* Meer afgeronde hoeken */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
+        }
+
+        h1 {
+            margin: 0px;
+            font-size: 28px;
+        }
+
+        .navigatie {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .navigatie button {
+            font-size: 20px;
+            border: none;
+            background: #4CAF50;
+            cursor: pointer;
+            padding: 10px 20px; /* Meer padding voor een grotere knop */
+            color: white;
+            border-radius: 5px; /* Afgeronde hoeken voor de knoppen */
+            transition: background 0.3s, transform 0.3s; /* Transitie-effect */
+        }
+
+        .navigatie button:hover {
+            background: #45a049; /* Donkerder groen bij hover */
+            transform: translateY(-2px); /* Lichte verhoging bij hover */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px; /* Meer padding voor celinhoud */
+            text-align: center;
+            background-color: white; /* Wit voor lege cellen */
+            border-radius: 5px; /* Afgeronde hoeken voor cellen */
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .tijd {
+            width: 70px;
+            background-color: #f1f1f1;
+        }
+
+        .activiteit {
+            background-color: #4CAF50; /* Groen voor cellen met activiteiten */
+            color: white; /* Witte tekst voor leesbaarheid */
+        }
+
+        .activiteit input {
+            width: 90%;
+            margin: 0 auto;
+            padding: 2px;
+        }
+
+        .huidige-dag {
+            background-color: #ffcc00; /* Gele achtergrond voor de huidige dag */
+            border: 3px solid #ffcc00; /* Grote gele rand voor de huidige dag */
+        }
+
+        .huidige-dag td {
+            border: 3px solid #ffcc00; /* Border om de cellen van de huidige dag */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="account-button">
+                <img src="/images/back.png" alt="Terug" class="profile-pic"> <!-- Terug naar dashboard -->
+                Terug naar dashboard
+            </a>
+            <h1>Rooster</h1>
+        </div>
+    </header>
+
+    <div class="rooster-container">
+        <div class="navigatie">
+            <button onclick="wijzigWeek(-1)">&#8592;</button>
+            <h2 id="huidigeWeek"></h2>
+            <button onclick="wijzigWeek(1)">&#8594;</button>
+            <button onclick="gaNaarVandaag()">Vandaag</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tijd</th>
+                    <th id="dag1"></th>
+                    <th id="dag2"></th>
+                    <th id="dag3"></th>
+                    <th id="dag4"></th>
+                    <th id="dag5"></th>
+                    <th id="dag6"></th>
+                    <th id="dag7"></th>
+                </tr>
+            </thead>
+            <tbody id="weekoverzicht">
+                <!-- Dynamische inhoud wordt hier toegevoegd -->
+            </tbody>
+        </table>
+
+        <div style="text-align: center; margin-top: 10px;">
+            <button onclick="window.print()">Rooster afdrukken</button>
+        </div>
+    </div>
+
+    <script>
+        // Startdatum is de maandag van de huidige week
+        let huidigeDatum = new Date();
+        const vandaag = new Date(); // Houd de huidige datum apart
+
+        // Zorg ervoor dat de startdatum de maandag van deze week is
+        function setStartDatum() {
+            const day = huidigeDatum.getDay();
+            const distanceToMonday = (day + 6) % 7; // Hoeveel dagen terug naar de maandag
+            huidigeDatum.setDate(huidigeDatum.getDate() - distanceToMonday); // Zet naar de maandag
+        }
+
+        setStartDatum(); // Zet de startdatum
+
+        // Functie om de week te tonen
+        function toonWeek() {
+            const weekoverzicht = document.getElementById('weekoverzicht');
+            const huidigeWeekElement = document.getElementById('huidigeWeek');
+            weekoverzicht.innerHTML = ''; // Leeg de tabel
+
+            // De dagen in de week
+            const dagen = [];
+            for (let i = 0; i < 7; i++) {
+                const dag = new Date(huidigeDatum);
+                dag.setDate(huidigeDatum.getDate() + i); // Voeg i dagen toe
+                dagen.push(dag);
+            }
+
+            // Voor de header van de tabel
+            dagen.forEach((dag, index) => {
+                const dagString = `${dag.getDate()}/${dag.getMonth() + 1}`; // Datum in dd/mm
+                const dagHeader = document.getElementById('dag' + (index + 1));
+                dagHeader.innerText = `${dag.toLocaleDateString('nl-NL', { weekday: 'long' }).charAt(0).toUpperCase() + dag.toLocaleDateString('nl-NL', { weekday: 'long' }).slice(1)} (${dagString})`;
+
+                // Verwijder de 'huidige-dag' klasse van alle dagen
+                dagHeader.classList.remove('huidige-dag');
+
+                // Controleer of het de huidige dag is
+                if (dag.toDateString() === vandaag.toDateString()) {
+                    dagHeader.classList.add('huidige-dag'); // Voeg de gele markering toe aan de huidige dag
+                }
+            });
+
+            // Activiteiten array initialiseren
+            const activiteiten = Array.from({ length: 7 }, () => Array(24).fill('')); // 24 Uren voor 7 dagen
+
+            // Vul de activiteiten voor donderdag 17 oktober 2024
+            for (let dagIndex = 0; dagIndex < 7; dagIndex++) {
+                const dag = dagen[dagIndex];
+                if (dag.getFullYear() === 2024 && dag.getMonth() === 9 && dag.getDate() === 17) {
+                    // Open Dag van 10:00 tot 20:00
+                    for (let hour = 10; hour < 20; hour++) {
+                        activiteiten[dagIndex][hour] = "Open Dag";
+                    }
+                    activiteiten[dagIndex][20] = ""; // Zorg ervoor dat 20:00 leeg is
+                }
+            }
+
+            // Vul hier andere activiteiten in voor andere dagen...
+
+            // Vul de tabel met activiteiten en tijden
+            for (let hour = 7; hour <= 26; hour++) { // Uren van 07:00 tot 02:00
+    const rij = document.createElement('tr');
+    const tijdCel = document.createElement('td');
+    tijdCel.className = "tijd";
+    tijdCel.innerText = (hour < 24 ? hour : hour - 24) + ":00"; // 24-uurs notatie
+    rij.appendChild(tijdCel);
+
+    for (let dagIndex = 0; dagIndex < 7; dagIndex++) {
+        const activiteitCel = document.createElement('td');
+        const activiteit = activiteiten[dagIndex][hour];
+
+        if (activiteit) {
+            let rowspan = 1;
+            // Controleer voor het samenvoegen van cellen
+            for (let volgendeHour = hour + 1; volgendeHour <= 26; volgendeHour++) {
+                if (activiteiten[dagIndex][volgendeHour] === activiteit) {
+                    rowspan++;
+                } else {
+                    break; // Stop met tellen als het niet hetzelfde is
+                }
+            }
+
+            // Voeg de activiteit en de tijden toe aan de cel
+            activiteitCel.setAttribute("rowspan", rowspan);
+            const startTime = (hour < 24 ? hour : hour - 24) + ":00"; // Begin tijd
+            const endTime = (hour + rowspan <= 20 ? hour + rowspan : 20) + ":00"; // Eind tijd, maak zeker dat het max tot 20 is
+
+            activiteitCel.innerText = `${activiteit} (${startTime} - ${endTime})`; // Toon activiteit met tijden
+
+            // Maak de cellen leeg die samengevoegd worden
+            for (let i = 0; i < rowspan; i++) {
+                activiteiten[dagIndex][hour + i] = ''; // Maak de cellen leeg die samengevoegd worden
+            }
+        }
+
+        // Kleur de cellen op basis van activiteit
+        activiteitCel.className += activiteit ? " activiteit" : ""; // Voeg de activiteit klasse toe als er iets is
+        rij.appendChild(activiteitCel);
+    }
+
+    weekoverzicht.appendChild(rij);
+}
+
+
+            // Huidige week weergave
+            huidigeWeekElement.innerText = `Huidige week: ${dagen[0].toLocaleDateString('nl-NL')} - ${dagen[6].toLocaleDateString('nl-NL')}`;
+        }
+
+        function wijzigWeek(aantal) {
+            huidigeDatum.setDate(huidigeDatum.getDate() + aantal * 7); // Verschuif de week
+            toonWeek(); // Update de weergave
+        }
+
+        function gaNaarVandaag() {
+            huidigeDatum = new Date(); // Stel huidigeDatum opnieuw in op vandaag
+            setStartDatum(); // Zet de datum naar de maandag van deze week
+            toonWeek(); // Update de weergave
+        }
+
+        // Toon de eerste week
+        toonWeek();
+    </script>
+
+</body>
+</html>

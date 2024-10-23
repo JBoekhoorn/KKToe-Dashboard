@@ -426,11 +426,12 @@ app.get('/inschrijvingen-beheren', async (req, res) => {
 app.post('/inschrijving-toevoegen', (req, res) => {
     const { datum, activiteit, soort_dienst, aanvang, einde, notities } = req.body;
 
-    // Voeg de inschrijving toe aan de database
-    db.query('INSERT INTO inschrijvingen (datum, activiteit, soort_dienst, aanvang, einde, notities) VALUES (?, ?, ?, ?, ?, ?)', 
+    // Voeg de inschrijving toe aan de database in de 'diensten' tabel
+    db.query('INSERT INTO diensten (datum, activiteit, soort_dienst, aanvang, einde, notities) VALUES (?, ?, ?, ?, ?, ?)', 
     [datum, activiteit, soort_dienst, aanvang, einde, notities], 
     (error, results) => {
         if (error) {
+            console.error('Fout bij het toevoegen van inschrijving:', error); // Log the error for debugging
             return res.status(500).send('Fout bij het toevoegen van inschrijving.');
         }
         res.redirect('/inschrijving-beheren'); // Redirect na toevoeging
@@ -442,8 +443,13 @@ app.post('/inschrijvingen-verwijderen', async (req, res) => {
     const { inschrijving_id } = req.body;
 
     try {
+        // Verwijder de inschrijving uit de 'diensten' tabel
         const sql = 'DELETE FROM diensten WHERE id = ?';
         const [result] = await db.query(sql, [inschrijving_id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, error: 'Inschrijving niet gevonden' });
+        }
 
         res.json({ success: true });
     } catch (err) {
@@ -451,6 +457,7 @@ app.post('/inschrijvingen-verwijderen', async (req, res) => {
         res.status(500).json({ success: false, error: 'Fout bij verwijderen van inschrijving' });
     }
 });
+
 
 // Rooster diensten ophalen uit de diensten tabel
 app.get('/rooster', async (req, res) => {

@@ -54,12 +54,22 @@
         input[type="email"],
         input[type="tel"],
         input[type="password"] {
-            width: 95%;
+            width: calc(100% - 40px); /* Ruimte voor het icoon */
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+            position: relative; /* Voor positionering van het icoon */
+        }
+
+        .toggle-password {
+            cursor: pointer;
+            position: absolute;
+            right: 10px; /* Afstand van de rechterkant */
+            top: 38%; /* Centraal verticaal positioneren */
+            transform: translateY(-50%); /* Om het precies in het midden te krijgen */
+            font-size: 18px; /* Groter maken voor betere zichtbaarheid */
         }
 
         button {
@@ -100,24 +110,27 @@
     <div class="gegevens-container">
         <section class="user-info">
             <h2>Persoonlijke Informatie</h2>
-            <form action="/update-gegevens" method="POST">
+            <form action="/dashboard" method="POST">
                 <label for="username">Naam:</label>
-                <input type="text" id="username" name="username" value="<%= user.username %>" disabled>
+                <input type="text" id="username" name="username" value="<%= user.naam %>" disabled>
 
                 <label for="class">Klas:</label>
-                <input type="text" id="class" name="class" value="<%= user.class %>" required>
+                <input type="text" id="class" name="klas" value="<%= user.klas %>" required>
 
                 <label for="teacher">Coach:</label>
-                <input type="text" id="teacher" name="teacher" value="<%= user.teacher %>" required>
+                <input type="text" id="teacher" name="teacher" value="<%= user.coach %>" required>
 
                 <label for="email">E-mail:</label>
                 <input type="email" id="email" name="email" value="<%= user.email %>" required>
 
                 <label for="phone">Telefoonnummer:</label>
-                <input type="tel" id="phone" name="phone" value="<%= user.phone %>">
+                <input type="tel" id="phone" name="phone" value="<%= user.telefoonnummer %>">
 
                 <label for="password">Nieuw wachtwoord (optioneel):</label>
-                <input type="password" id="password" name="password">
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" placeholder="Typ een nieuw wachtwoord...">
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+                </div>
 
                 <button type="submit">Wijzigingen opslaan</button>
             </form>
@@ -133,5 +146,19 @@
     <footer>
         <p>© 2024 Mijn KKTOE. Alle rechten voorbehouden.</p>
     </footer>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const passwordToggle = document.querySelector('.toggle-password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordToggle.textContent = '🙈'; // verandering naar aapje
+            } else {
+                passwordInput.type = 'password';
+                passwordToggle.textContent = '👁️'; // verandering naar oogje
+            }
+        }
+    </script>
 </body>
 </html>

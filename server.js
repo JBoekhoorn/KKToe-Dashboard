@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2/promise'); // Gebruik mysql2 met promises
 const session = require('express-session');
 const bcrypt = require('bcrypt');
+const router = express.Router();
+const flash = require('connect-flash');
+
 
 const app = express();
 const PORT = 3000;
@@ -54,6 +57,9 @@ function checkRole(allowedRoles) {
         next();
     };
 }
+
+// Middleware voor flash-meldingen
+app.use(flash());
 
 // Functie om tijd te formatteren in HH:MM
 function formatTime(timeString) {
@@ -196,6 +202,48 @@ app.post('/diensten/inschrijven', async (req, res) => {
         console.error('Fout bij het updaten van de diensten:', err);
         res.status(500).json({ message: 'Er is iets fout gegaan.' });
     }
+});
+
+// Route om de gegevens voor de mijn-gegevens pagina op te halen uit de tabel
+router.get('/mijn-gegevens', async (req, res) => {
+    const userId = req.session.userId; // Aannemende dat de gebruikers-ID in de sessie is opgeslagen
+    const user = await User.findById(userId);
+    res.render('mijn-gegevens', { user });
+});
+
+// POST route om gegevens bij te werken
+router.post('/update-gegevens', async (req, res) => {
+    const { username, klas, coach, email, telefoonnummer, password } = req.body;
+    const userId = req.session.userId;
+
+    const updatedData = {
+        username,
+        klas,
+        coach,
+        email,
+        telefoonnummer
+    };
+
+    if (password) {
+        // Hash het nieuwe wachtwoord voordat je het opslaat
+        const hashedPassword = await bcrypt.hash(password, 10);
+        updatedData.password = hashedPassword;
+    }
+
+    await User.findByIdAndUpdate(userId, updatedData);
+    
+    // Stel een flash-melding in
+    req.flash('success', 'Je gegevens zijn succesvol opgeslagen.');
+
+    // Redirect naar de mijn-gegevens pagina
+    res.redirect('/mijn-gegevens');
+});
+
+module.exports = router;
+
+app.use((req, res, next) => {
+    res.locals.messages = req.flash('success');
+    next();
 });
 
 // Route voor het aanmaken van een nieuwe dienst

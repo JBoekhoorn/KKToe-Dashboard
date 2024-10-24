@@ -6,7 +6,6 @@
     <title>Inschrijvingen Beheren - KKTOE</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* Headerstijl */
         header {
             background-color: #ffffff; /* Achtergrondkleur van de header */
             padding: 10px 20px; /* Padding voor de header */
@@ -31,12 +30,11 @@
 
         .inschrijvingen-container {
             padding: 20px;
-            max-width: 800px;
-            margin: 20px auto;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            background-color: #f9f9f9;
+            max-width: 1200px; /* Maximale breedte van de container */
+            margin: 20px auto; /* Centreren van de container */
+            border-radius: 12px; /* Ronde hoeken voor de container */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
+            background-color: #f9f9f9; /* Achtergrondkleur van de container */
         }
 
         form {
@@ -64,39 +62,87 @@
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* Groene achtergrondkleur */
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 8px; /* Ronde hoeken */
+            cursor: pointer; /* Pointer cursor */
+            font-size: 16px; /* Grotere tekst */
+            margin-right: 10px; /* Ruimte tussen de knoppen */
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #45a049; /* Donkerder groen bij hover */
+        }
+
+        /* Specifieke stijlen voor actieknoppen */
+        .btn-verwijder {
+            background-color: #e74c3c; /* Rood voor verwijderen */
+            color: white;
+            padding: 10px 20px; /* Zelfde padding als de bewerken knop */
+            border-radius: 8px; /* Ronde hoeken */
+            border: none; /* Geen rand */
+            cursor: pointer; /* Pointer cursor */
+        }
+
+        .btn-verwijder:hover {
+            background-color: #c0392b; /* Donkerder rood bij hover */
+        }
+
+        .btn-bewerken {
+            background-color: #3498db; /* Blauw voor bewerken */
+            color: white;
+            padding: 10px 20px; /* Zelfde padding als de verwijderen knop */
+            border-radius: 8px; /* Ronde hoeken */
+            border: none; /* Geen rand */
+            cursor: pointer; /* Pointer cursor */
+            text-decoration: none; /* Verwijder onderstreping */
+        }
+
+        .btn-bewerken:hover {
+            background-color: #2980b9; /* Donkerder blauw bij hover */
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate; /* Scheiding tussen de cellen */
+            border-spacing: 0; /* Geen extra ruimte tussen cellen */
             margin-top: 20px;
+            border: 1px solid #ddd; /* Rand om de tabel */
+            border-radius: 12px; /* Ronde hoeken voor de tabel */
+            overflow: hidden; /* Zorg ervoor dat de hoeken goed afgerond blijven */
         }
 
         th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
+            border-bottom: 1px solid #ddd; /* Rand onder de cellen */
+            padding: 12px; /* Padding binnen de cellen */
+            text-align: center; /* Centreer de tekst */
         }
 
         th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #4CAF50; /* Achtergrondkleur van de header */
+            color: white; /* Kleur van de tekst in de header */
+            font-size: 16px; /* Grotere tekst voor de header */
+        }
+
+        tr:last-child td {
+            border-bottom: none; /* Geen onderrand voor de laatste rij */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Achtergrondkleur voor even rijen */
+        }
+
+        td {
+            background-color: white; /* Achtergrondkleur voor de cellen */
+            font-size: 14px; /* Tekstgrootte voor de cellen */
         }
 
         footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #000000;
+            text-align: center; /* Center de tekst in de footer */
+            margin-top: 20px; /* Ruimte boven de footer */
+            color: #000000; /* Kleur van de tekst in de footer */
         }
     </style>
 </head>
@@ -114,22 +160,11 @@
     <div class="inschrijvingen-container">
         <!-- Formulier voor het aanmaken van een nieuwe inschrijving -->
         <form id="inschrijvingForm" action="/inschrijving-toevoegen" method="POST">
-        
-            <label for="weekdag">Weekdag:</label>
-            <select id="weekdag" name="weekdag" required>
-                <option value="">Selecteer een weekdag</option>
-                <option value="maandag">Maandag</option>
-                <option value="dinsdag">Dinsdag</option>
-                <option value="woensdag">Woensdag</option>
-                <option value="donderdag">Donderdag</option>
-                <option value="vrijdag">Vrijdag</option>
-            </select>
-        
-            <label for="datum">Datum:</label>
-            <input type="date" id="datum" name="datum" required>
-        
             <label for="activiteit">Activiteit:</label>
             <input type="text" id="activiteit" name="activiteit" required>
+            
+            <label for="datum">Datum:</label>
+            <input type="date" id="datum" name="datum" required>
         
             <label for="soort_dienst">Soort Dienst:</label>
             <select id="soort_dienst" name="soort_dienst" required>
@@ -148,27 +183,25 @@
             <input type="time" id="einde" name="einde" required>
         
             <button type="submit">Inschrijving Toevoegen</button>
-        </form>        
+        </form>
 
         <!-- Tabel met inschrijvingen -->
         <h2>Bestaande Inschrijvingen</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Weekdag</th>
                     <th>Datum</th>
                     <th>Activiteit</th>
                     <th>Soort Dienst</th>
                     <th>Aanvang</th>
                     <th>Einde</th>
-                    <th>Acties</th>
+                    <th>Acties</th> <!-- Kolom voor de actieknoppen -->
                 </tr>
             </thead>
             <tbody id="inschrijvingen-tabel">
                 <% if (inschrijvingen.length > 0) { %>
                     <% inschrijvingen.forEach(function(inschrijving) { %>
                         <tr id="inschrijving-<%= inschrijving.id %>">
-                            <td><%= inschrijving.weekdag %></td>
                             <td>
                                 <% 
                                     const date = new Date(inschrijving.datum);
@@ -184,26 +217,26 @@
                             <td>
                                 <%
                                     const timeStart = new Date(`1970-01-01T${inschrijving.aanvang}`);
-                                    const formattedTimeStart = timeStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                    const formattedTimeStart = timeStart.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                                 %>
                                 <%= formattedTimeStart %>
                             </td>
                             <td>
                                 <%
                                     const timeEnd = new Date(`1970-01-01T${inschrijving.einde}`);
-                                    const formattedTimeEnd = timeEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                    const formattedTimeEnd = timeEnd.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                                 %>
                                 <%= formattedTimeEnd %>
                             </td>
                             <td>
-                                <button type="button" onclick="verwijderInschrijving('<%= inschrijving.id %>')">Verwijderen</button>
-                                <a href="/inschrijving-bewerken/<%= inschrijving.id %>">Bewerken</a>
+                                <button class="btn-verwijder" onclick="verwijderInschrijving('<%= inschrijving.id %>')">Verwijderen</button>
+                                <button class="btn-bewerken" onclick="bewerkenInschrijving('<%= inschrijving.id %>')">Bewerken</button>
                             </td>
                         </tr>
-                    <% }); %>
+                    <% }) %>
                 <% } else { %>
                     <tr>
-                        <td colspan="7">Geen inschrijvingen gevonden</td>
+                        <td colspan="6">Geen inschrijvingen gevonden.</td>
                     </tr>
                 <% } %>
             </tbody>
@@ -215,38 +248,7 @@
     </footer>
 
     <script>
-        // Functie om het formulier te verwerken via AJAX
-        document.getElementById('inschrijvingForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Voorkom de standaard formulierverzending
-
-            // Verkrijg de waarden van het formulier
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
-
-            // Stuur de gegevens naar de server
-            fetch('/inschrijving-toevoegen', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data) // Stuur de formuliergegevens als JSON
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Als succesvol, herlaad de tabel of doe iets anders
-                    location.reload(); // Herlaad de pagina om de wijzigingen te zien
-                } else {
-                    alert('Er is een fout opgetreden: ' + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error('Fout:', error);
-                alert('Er is een fout opgetreden bij het verzenden van de gegevens.');
-            });
-        });
-
-        // Functie om inschrijving te verwijderen
+        // Functie om de inschrijving te verwijderen
         function verwijderInschrijving(inschrijvingId) {
             // Bevestiging vragen aan de gebruiker
             if (confirm('Weet je zeker dat je deze inschrijving wilt verwijderen?')) {
@@ -275,6 +277,12 @@
                     alert('Er is een fout opgetreden bij het verzenden van het verwijderverzoek.');
                 });
             }
+        }
+
+        // Functie om de inschrijving te bewerken
+        function bewerkenInschrijving(inschrijvingId) {
+            // Hier kun je de logica voor het bewerken van de inschrijving implementeren.
+            alert(`Bewerken van inschrijving ID: ${inschrijvingId}`);
         }
     </script>
 </body>

@@ -162,6 +162,10 @@ app.post('/intekenen', checkRole(['techniek', 'kktoe', 'administrator']), async 
 // Route voor het bekijken van openstaande diensten
 app.get('/openstaande-diensten', async (req, res) => {
     try {
+        // Controleer of de gebruiker is ingelogd
+        const user = req.session.user; // Zorg ervoor dat de user in de sessie zit
+
+        // Haal alle openstaande diensten op (waar de user_id NULL is)
         const [results] = await db.query('SELECT * FROM diensten WHERE user_id IS NULL');
 
         // Format de tijden voor elke dienst
@@ -173,11 +177,21 @@ app.get('/openstaande-diensten', async (req, res) => {
             };
         });
 
-        if (formattedResults.length === 0) {
+        // Controleer of de ingelogde gebruiker de rol 'kktoe' heeft
+        let filteredResults = formattedResults;
+        if (user && user.role === 'kktoe') {
+            // Filter diensten voor KKTOE-rol: alleen 'KKToe - Algemeen' en 'KKToe - Horeca'
+            filteredResults = formattedResults.filter(dienst => 
+                dienst.soort_dienst === 'KKToe - Algemeen' || dienst.soort_dienst === 'KKToe - Horeca'
+            );
+        }
+
+        if (filteredResults.length === 0) {
             return res.render('openstaande-diensten', { diensten: [], message: 'Geen openstaande diensten gevonden.' });
         }
 
-        res.render('openstaande-diensten', { diensten: formattedResults, message: '' });
+        // Render de pagina met gefilterde resultaten
+        res.render('openstaande-diensten', { diensten: filteredResults, message: '' });
     } catch (error) {
         console.error('Fout bij het ophalen van diensten:', error);
         res.status(500).json({ message: 'Fout bij het ophalen van diensten.' });
@@ -248,11 +262,11 @@ app.use((req, res, next) => {
 
 // Route voor het aanmaken van een nieuwe dienst
 app.post('/diensten-aanmaken', async (req, res) => {
-    const { weekdag, datum, activiteit, soort_dienst, aanvang, einde } = req.body;
+    const { datum, activiteit, soort_dienst, aanvang, einde } = req.body;
 
     try {
-        await db.query('INSERT INTO diensten (weekdag, datum, activiteit, soort_dienst, aanvang, einde) VALUES (?, ?, ?, ?, ?, ?)', 
-            [weekdag, datum, activiteit, soort_dienst, aanvang, einde]);
+        await db.query('INSERT INTO diensten (datum, activiteit, soort_dienst, aanvang, einde) VALUES (?, ?, ?, ?, ?)', 
+            [datum, activiteit, soort_dienst, aanvang, einde]);
         res.redirect('/diensten-beheren');
     } catch (err) {
         console.error('Fout bij het toevoegen van de dienst: ', err);

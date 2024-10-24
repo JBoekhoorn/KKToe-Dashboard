@@ -23,7 +23,8 @@
             <img src="/images/rooster.png" alt="Rooster">
         </a>
 
-        <% if (user && (user.role === 'administrator' || user.role === 'techniek')) { %>
+        <!-- Voeg 'kktoe' rol toe aan de voorwaarde -->
+        <% if (user && (user.role === 'administrator' || user.role === 'techniek' || user.role === 'kktoe')) { %>
             <a href="/openstaande-diensten" class="button">
                 <span>Openstaande diensten</span>
                 <img src="/images/intekenen.png" alt="Intekenen op diensten">

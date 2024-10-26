@@ -3,121 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mijn Account - KKTOE</title>
+    <title>Mijn Gegevens - KKTOE</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
- header {
-            background-color: #ffffff; /* Achtergrondkleur van de header */
-            padding: 10px 20px; /* Padding voor de header */
+        /* Headerstijl */
+        header {
+            background-color: #ffffff;
+            padding: 10px 20px;
             display: flex;
-            align-items: center; /* Center de items verticaal */
-            justify-content: flex-start; /* Items aan de linkerkant */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
-            width: 100%; /* Zorg ervoor dat de header de volledige breedte heeft */
+            align-items: center;
+            justify-content: flex-start;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
 
         .header-content {
             display: flex;
-            align-items: center; /* Center de items verticaal */
+            align-items: center;
         }
 
         .header-content h1 {
-            margin-left: 20px; /* Ruimte tussen de terugknop en de titel */
-            margin: 0; /* Verwijder standaard marges */
-            font-size: 24px; /* Grotere titel */
-            color: #333; /* Donkerdere kleur voor de titel */
+            margin-left: 20px;
+            margin: 0;
+            font-size: 24px;
+            color: #333;
         }
 
-        .account-container {
+        .gegevens-container {
             padding: 20px;
-            max-width: 600px; /* Max breedte voor de container */
-            margin: 20px auto; /* Center de container horizontaal */
-            border: 1px solid #ddd; /* Rand om de container */
-            border-radius: 8px; /* Afgeronde hoeken */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
-            background-color: #f9f9f9; /* Achtergrondkleur van de container */
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
         }
 
-        h2 {
-            font-size: 20px;
-            color: #555; /* Donkerdere kleur voor titels */
-            margin-bottom: 10px; /* Ruimte onder de titels */
-        }
-
-        .profile-picture {
-            text-align: center; /* Center de inhoud */
-            margin-bottom: 20px; /* Ruimte onder de profielsectie */
-        }
-
-        .profile-picture img {
-            width: 100px; /* Breedte van de profielafbeelding */
-            height: 100px; /* Hoogte van de profielafbeelding */
-            border-radius: 50%; /* Maak de afbeelding rond */
-            object-fit: cover; /* Zorg ervoor dat de afbeelding goed wordt weergegeven */
+        section {
+            margin-bottom: 20px;
         }
 
         label {
-            display: block; /* Labels in nieuwe regel */
-            margin-bottom: 5px; /* Ruimte onder de labels */
-            font-weight: bold; /* Vetgedrukte labels */
-            color: #555; /* Donkerdere kleur voor labels */
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
         }
 
+        input[type="text"],
         input[type="email"],
-        input[type="password"],
-        input[type="tel"] {
-            width: 95%; /* Volledige breedte van het invoerveld */
-            padding: 10px; /* Padding voor invoervelden */
-            margin-bottom: 15px; /* Ruimte onder de invoervelden */
-            border: 1px solid #ccc; /* Rand van de invoervelden */
-            border-radius: 5px; /* Afgeronde hoeken voor invoervelden */
-            font-size: 16px; /* Grotere tekst */
+        input[type="tel"],
+        input[type="password"] {
+            width: calc(100% - 40px); /* Ruimte voor het icoon */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            position: relative; /* Voor positionering van het icoon */
+        }
+
+        .toggle-password {
+            cursor: pointer;
+            position: absolute;
+            right: 10px; /* Afstand van de rechterkant */
+            top: 38%; /* Centraal verticaal positioneren */
+            transform: translateY(-50%); /* Om het precies in het midden te krijgen */
+            font-size: 18px; /* Groter maken voor betere zichtbaarheid */
         }
 
         button {
-            background-color: #4CAF50; /* Groene achtergrond voor knoppen */
-            color: white; /* Witte tekstkleur */
-            border: none; /* Geen rand */
-            padding: 10px 20px; /* Padding voor knoppen */
-            border-radius: 5px; /* Afgeronde hoeken voor knoppen */
-            cursor: pointer; /* Wijzig de cursor naar een handje */
-            font-size: 16px; /* Grotere tekst voor knoppen */
-            width: 100%; /* Knoppen nemen de volledige breedte in */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 99%;
         }
 
         button:hover {
-            background-color: #45a049; /* Donkerdere groene kleur bij hover */
+            background-color: #45a049;
         }
 
         .logout-button {
-            background-color: #f44336; /* Rood voor uitloggen */
-            margin-top: 10px;
+            background-color: #f44336;
         }
 
         .logout-button:hover {
-            background-color: #d32f2f; /* Donkerder rood bij hover */
+            background-color: #d32f2f;
         }
-
-        footer {
-            text-align: center; /* Center de footer inhoud */
-            margin-top: 20px; /* Ruimte boven de footer */
-        }
-        
     </style>
 </head>
 <body>
     <header>
-        <h1>Mijn account</h1>
+        <div class="header-content">
+            <a href="/dashboard" class="account-button">
+                <img src="/images/back.png" alt="Terug" class="profile-pic">
+                Terug naar dashboard
+            </a>
+            <h1>Mijn Account</h1>
+        </div>
     </header>
 
-    <div class="account-container">
+    <div class="gegevens-container">
         <section class="user-info">
-            <h2>Gebruikersinformatie</h2>
-            <div class="profile-picture">
-                <img src="/images/profiel-foto.png" alt="Profiel Foto">
-                <p><strong>Gebruikersnaam:</strong> <%= username %></p> <!-- Dynamische gebruikersnaam -->
-                <p><strong>Email:</strong> <%= email %></p> <!-- Dynamische email -->
-            </div>
+            <h2>Persoonlijke Informatie</h2>
+            <form action="/dashboard" method="POST">
+                <label for="username">Naam:</label>
+                <input type="text" id="username" name="username" value="<%= user.naam %>" disabled>
+
+                <label for="class">Klas:</label>
+                <input type="text" id="class" name="klas" value="<%= user.klas %>" required>
+
+                <label for="teacher">Coach:</label>
+                <input type="text" id="teacher" name="teacher" value="<%= user.coach %>" required>
+
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" value="<%= user.email %>" required>
+
+                <label for="phone">Telefoonnummer:</label>
+                <input type="tel" id="phone" name="phone" value="<%= user.telefoonnummer %>">
+
+                <label for="password">Nieuw wachtwoord (optioneel):</label>
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" placeholder="Typ een nieuw wachtwoord...">
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+                </div>
+
+                <button type="submit">Wijzigingen opslaan</button>
+            </form>
         </section>
 
         <section class="logout">
@@ -130,5 +146,19 @@
     <footer>
         <p>© 2024 Mijn KKTOE. Alle rechten voorbehouden.</p>
     </footer>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const passwordToggle = document.querySelector('.toggle-password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordToggle.textContent = '🙈'; // verandering naar aapje
+            } else {
+                passwordInput.type = 'password';
+                passwordToggle.textContent = '👁️'; // verandering naar oogje
+            }
+        }
+    </script>
 </body>
 </html>

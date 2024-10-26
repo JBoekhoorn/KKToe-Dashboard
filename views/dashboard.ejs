@@ -11,17 +11,14 @@
         <div class="header-content">
             <a href="/account" class="account-button">
                 <img src="/images/profiel-foto.png" alt="Mijn Account" class="profile-pic">
-                Mijn Account
-            </a>
+                <%= user.naam %> <!-- Weergave van de naam van de ingelogde gebruiker -->
+            </a>                   
             <h1>Mijn KKTOE Dashboard</h1>
         </div>
     </header>
 
     <div class="button-container">
-        <a href="/rooster" class="button">
-            <span>Rooster</span>
-            <img src="/images/rooster.png" alt="Rooster">
-        </a>
+        <!-- Roosterknop verwijderd -->
 
         <!-- Voeg 'kktoe' rol toe aan de voorwaarde -->
         <% if (user && (user.role === 'administrator' || user.role === 'techniek' || user.role === 'kktoe')) { %>
@@ -34,11 +31,6 @@
         <a href="/mijn-diensten" class="button">
             <span>Mijn diensten</span>
             <img src="/images/mijn-diensten.png" alt="Mijn diensten">
-        </a>
-
-        <a href="/mijn-gegevens" class="button">
-            <span>Mijn gegevens</span>
-            <img src="/images/mijn-gegevens.png" alt="Mijn gegevens">
         </a>
 
         <% if (user.role === 'administrator') { %>

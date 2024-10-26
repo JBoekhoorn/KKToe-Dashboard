@@ -112,10 +112,16 @@ app.post('/login', async (req, res) => {
 
 // Route voor Dashboard
 app.get('/dashboard', (req, res) => {
+    // Controleer of de gebruiker ingelogd is
     if (!req.session.user) {
-        return res.redirect('/login'); // Controleer of de gebruiker ingelogd is
+        return res.redirect('/login'); // Omleiden naar de inlogpagina als niet ingelogd
     }
-    res.render('dashboard', { title: 'Welkom bij Mijn KKTOE Dashboard', user: req.session.user });
+
+    // Render de dashboard pagina met de titel en de ingelogde gebruiker
+    res.render('dashboard', {
+        title: 'Welkom bij Mijn KKTOE Dashboard',
+        user: req.session.user // Doorgeven van de ingelogde gebruiker
+    });
 });
 
 // Route voor het admin dashboard
@@ -218,11 +224,11 @@ app.post('/diensten/inschrijven', async (req, res) => {
     }
 });
 
-// Route om de gegevens voor de mijn-gegevens pagina op te halen uit de tabel
-router.get('/mijn-gegevens', async (req, res) => {
+// Route om de gegevens voor de account pagina op te halen uit de tabel
+router.get('/account', async (req, res) => {
     const userId = req.session.userId; // Aannemende dat de gebruikers-ID in de sessie is opgeslagen
     const user = await User.findById(userId);
-    res.render('mijn-gegevens', { user });
+    res.render('account', { user });
 });
 
 // POST route om gegevens bij te werken
@@ -249,8 +255,8 @@ router.post('/update-gegevens', async (req, res) => {
     // Stel een flash-melding in
     req.flash('success', 'Je gegevens zijn succesvol opgeslagen.');
 
-    // Redirect naar de mijn-gegevens pagina
-    res.redirect('/mijn-gegevens');
+    // Redirect naar de account pagina
+    res.redirect('/account');
 });
 
 module.exports = router;
@@ -330,25 +336,6 @@ app.get('/gebruikers', checkRole(['administrator']), async (req, res) => {
     }
 });
 
-// Route voor het bekijken van het volledige rooster
-app.get('/rooster', async (req, res) => {
-    try {
-        const [diensten] = await db.query('SELECT * FROM diensten');
-        
-        // Format de tijden voor elke dienst
-        const formattedDiensten = diensten.map(dienst => ({
-            ...dienst,
-            aanvang: formatTime(dienst.aanvang),
-            einde: formatTime(dienst.einde)
-        }));
-
-        res.render('rooster', { diensten: formattedDiensten, title: 'Volledig Rooster' });
-    } catch (error) {
-        console.error('Fout bij het ophalen van het rooster:', error);
-        res.status(500).json({ message: 'Fout bij het ophalen van het rooster.' });
-    }
-});
-
 // Route voor het beheren van diensten
 app.get('/diensten-beheren', checkRole(['administrator']), async (req, res) => {
     try {
@@ -369,7 +356,7 @@ app.get('/diensten-beheren', checkRole(['administrator']), async (req, res) => {
 });
 
 // Route voor het bekijken van persoonlijke gegevens
-app.get('/mijn-gegevens', (req, res) => {
+app.get('/account', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login'); // Gebruiker moet ingelogd zijn
     }
@@ -379,7 +366,7 @@ app.get('/mijn-gegevens', (req, res) => {
     db.query('SELECT * FROM users WHERE id = ?', [userId])
         .then(([result]) => {
             if (result.length > 0) {
-                res.render('mijn-gegevens', { user: result[0], title: 'Mijn Gegevens' });
+                res.render('account', { user: result[0], title: 'account' });
             } else {
                 res.status(404).json({ message: 'Gebruiker niet gevonden.' });
             }
@@ -391,7 +378,7 @@ app.get('/mijn-gegevens', (req, res) => {
 });
 
 // Route voor het bewerken van persoonlijke gegevens
-app.post('/mijn-gegevens', (req, res) => {
+app.post('/account', (req, res) => {
     const userId = req.session.user.id;
     const { email, wachtwoord } = req.body;
 
@@ -406,7 +393,7 @@ app.post('/mijn-gegevens', (req, res) => {
             }
             queryParams.push(hashedPassword);
             db.query(updateQuery, queryParams)
-                .then(() => res.redirect('/mijn-gegevens'))
+                .then(() => res.redirect('/account'))
                 .catch(err => {
                     console.error('Fout bij het updaten van gebruikersgegevens:', err);
                     res.status(500).json({ message: 'Er is iets misgegaan bij het updaten van de gegevens.' });
@@ -414,7 +401,7 @@ app.post('/mijn-gegevens', (req, res) => {
         });
     } else {
         db.query(updateQuery, queryParams)
-            .then(() => res.redirect('/mijn-gegevens'))
+            .then(() => res.redirect('/account'))
             .catch(err => {
                 console.error('Fout bij het updaten van gebruikersgegevens:', err);
                 res.status(500).json({ message: 'Er is iets misgegaan bij het updaten van de gegevens.' });
@@ -520,24 +507,38 @@ app.post('/inschrijvingen-verwijderen', async (req, res) => {
     }
 });
 
-
-// Rooster diensten ophalen uit de diensten tabel
+// Route voor het bekijken van het volledige rooster
 app.get('/rooster', async (req, res) => {
     try {
         // Verbind met de database en haal diensten op
-        const result = await db.query(
-            `SELECT id, user_id, weekdag, datum, activiteit, soort_dienst, aanvang, einde 
-             FROM diensten`
-        );
+        const result = await db.query('SELECT id, user_id, datum, activiteit, soort_dienst, aanvang, einde FROM diensten');
+        
+        // Log het volledige resultaat om te begrijpen hoe het is gestructureerd
+        console.log(result);
+
+        // Neem alleen de eerste array met rijen
+        const diensten = result[0]; // Dit haalt de eerste array (de rijen) uit het resultaat
 
         // Controleer of er resultaten zijn
-        console.log(result.rows); // Dit logt de opgehaalde rijen naar de console
+        if (!diensten || diensten.length === 0) {
+            throw new Error("Geen rijen gevonden in het resultaat.");
+        }
 
-        // Verstuur de opgehaalde data naar je ejs template
-        res.render('rooster', { diensten: result.rows });
+        // Log de opgehaalde rijen naar de console
+        console.log(diensten); 
+
+        // Format de tijden voor elke dienst
+        const formattedDiensten = diensten.map(dienst => ({
+            ...dienst,
+            aanvang: formatTime(dienst.aanvang),
+            einde: formatTime(dienst.einde)
+        }));
+
+        // Verstuur de opgehaalde en geformatteerde data naar je EJS template
+        res.render('rooster', { diensten: formattedDiensten, title: 'Volledig Rooster' });
     } catch (error) {
-        console.error('Error fetching data', error);
-        res.status(500).send('Er is een fout opgetreden bij het ophalen van de diensten');
+        console.error('Fout bij het ophalen van het rooster:', error);
+        res.status(500).json({ message: 'Fout bij het ophalen van het rooster.' });
     }
 });
 

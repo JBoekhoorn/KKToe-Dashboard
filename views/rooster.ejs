@@ -186,11 +186,19 @@
                         <% for (let dagIndex = 0; dagIndex < 7; dagIndex++) { %>
                             <td>
                                 <% 
-                                // Filter diensten voor de huidige dag en tijdstip
+                                // Huidige datum voor de dag
+                                const huidigeDatum = new Date();
+                                huidigeDatum.setDate(huidigeDatum.getDate() + dagIndex); // Vandaag + dagIndex
+            
+                                // Filter de diensten voor de huidige dag en tijdstip
                                 let huidigeDiensten = diensten.filter(dienst => {
-                                    return dienst.weekdag === dagen[dagIndex] 
-                                        && Number(dienst.aanvang.split(':')[0]) <= hour 
-                                        && Number(dienst.einde.split(':')[0]) > hour;
+                                    const dienstDatum = new Date(dienst.datum); // Maak een datum-object van de dienst
+                                    const dienstAanvang = new Date(dienst.datum + 'T' + dienst.aanvang);
+                                    const dienstEinde = new Date(dienst.datum + 'T' + dienst.einde);
+            
+                                    return dienstDatum.toDateString() === huidigeDatum.toDateString() // Vergelijk datums
+                                        && dienstAanvang.getHours() <= hour 
+                                        && dienstEinde.getHours() > hour;
                                 });
             
                                 // Toon de dienst indien er één gevonden is
@@ -205,7 +213,7 @@
                         <% } %>
                     </tr>
                 <% } %>
-            </tbody>                               
+            </tbody>                                                 
         </table>
 
         <button onclick="window.print()">Rooster afdrukken</button>

@@ -168,6 +168,10 @@
                         return '00:00'; // Standaardwaarde als er geen tijd is
                     } %>
                     <% if (diensten.length > 0) { %>
+                        <% 
+                            // Sorteer de diensten op datum (oudste datum eerst)
+                            diensten.sort((a, b) => new Date(a.datum) - new Date(b.datum));
+                        %>
                         <% diensten.forEach(dienst => { %>
                             <tr>
                                 <td><input type="checkbox" name="dienst_ids" value="<%= dienst.id %>"></td>
@@ -184,7 +188,7 @@
                             <td colspan="7">Geen openstaande diensten gevonden.</td>
                         </tr>
                     <% } %>
-                </tbody>
+                </tbody>                
             </table>
 
             <div id="success-message">Je diensten zijn succesvol opgeslagen!</div>

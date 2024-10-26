@@ -200,6 +200,10 @@
             </thead>
             <tbody id="inschrijvingen-tabel">
                 <% if (inschrijvingen.length > 0) { %>
+                    <% 
+                        // Sorteer de inschrijvingen op datum (van vroeg naar laat)
+                        inschrijvingen.sort((a, b) => new Date(a.datum) - new Date(b.datum)); 
+                    %>
                     <% inschrijvingen.forEach(function(inschrijving) { %>
                         <tr id="inschrijving-<%= inschrijving.id %>">
                             <td>
@@ -239,7 +243,7 @@
                         <td colspan="6">Geen inschrijvingen gevonden.</td>
                     </tr>
                 <% } %>
-            </tbody>
+            </tbody>            
         </table>
     </div>
 

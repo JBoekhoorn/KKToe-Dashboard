@@ -96,7 +96,8 @@ app.post('/login', async (req, res) => {
                 req.session.user = {
                     id: user.id,
                     email: user.email,
-                    role: user.role
+                    role: user.role,
+                    naam: user.naam // Voeg hier de naam van de gebruiker toe
                 };
                 return res.redirect('/dashboard');
             }

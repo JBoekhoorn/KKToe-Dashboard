@@ -105,6 +105,22 @@
             background-color: #d32f2f;
         }
 
+        .add-to-calendar-button {
+            background-color: #4285F4; /* Google blauw */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-calendar-button:hover {
+            background-color: #357ae8; /* Iets donkerdere tint bij hover */
+        }
+
         thead th:first-child {
             border-top-left-radius: 12px;
         }
@@ -149,7 +165,7 @@
                     <th>Soort dienst</th>
                     <th>Aanvang</th>
                     <th>Einde</th>
-                    <th>Acties</th> <!-- Kolom voor de uitschrijven knop -->
+                    <th>Acties</th> <!-- Kolom voor de uitschrijven en agenda-knoppen -->
                 </tr>
             </thead>
             <tbody>
@@ -172,8 +188,8 @@
                             <td><%= formatTime(dienst.aanvang) %></td>
                             <td><%= formatTime(dienst.einde) %></td>
                             <td>
-                                <!-- Uitschrijven knop -->
                                 <button class="delete-button" onclick="removeDienst('<%= dienst.id %>')">Uitschrijven</button>
+                                <button class="add-to-calendar-button" onclick="addToCalendar('<%= dienst.activiteit %>', '<%= dienst.datum %>', '<%= dienst.aanvang %>', '<%= dienst.einde %>')">Toevoegen aan agenda</button>
                             </td>
                         </tr>
                     <% }) %>
@@ -198,7 +214,6 @@
                 document.body.innerHTML = originalContent;
             }
 
-            // Functie om de dienst te verwijderen (user_id op NULL zetten)
             function removeDienst(dienstId) {
                 if (confirm("Weet je zeker dat je je wilt uitschrijven voor deze dienst?")) {
                     fetch(`/diensten/verwijderen/${dienstId}`, {
@@ -211,7 +226,6 @@
                         if (!response.ok) {
                             throw new Error('Er is iets misgegaan bij het uitschrijven.');
                         }
-                        // Herlaad de pagina om de bijgewerkte diensten te zien
                         location.reload(); 
                     })
                     .catch(error => {
@@ -219,6 +233,29 @@
                     });
                 }
             }
+
+            function addToCalendar(activiteit, datum, aanvang, einde) {
+    try {
+        // Datum en tijd naar een consistent ISO formaat omzetten
+        const parsedDatum = new Date(datum + 'T00:00:00');
+        const parsedAanvang = new Date(`${datum}T${aanvang}:00`);
+        const parsedEinde = new Date(`${datum}T${einde}:00`);
+
+        if (isNaN(parsedDatum) || isNaN(parsedAanvang) || isNaN(parsedEinde)) {
+            throw new Error("Ongeldige datum of tijd.");
+        }
+
+        const startDateTime = parsedAanvang.toISOString().replace(/-|:|\.\d+/g, '');
+        const endDateTime = parsedEinde.toISOString().replace(/-|:|\.\d+/g, '');
+
+        const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(activiteit)}&dates=${startDateTime}/${endDateTime}&ctz=Europe/Amsterdam`;
+
+        window.open(calendarUrl, '_blank');
+    } catch (error) {
+        console.error("Fout bij het toevoegen aan de agenda:", error);
+        alert("Er is iets misgegaan bij het toevoegen aan de agenda. Controleer de datum, tijd en probeer opnieuw.");
+    }
+}
         </script>
     </div>
 

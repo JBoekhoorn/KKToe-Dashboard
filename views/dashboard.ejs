@@ -18,8 +18,11 @@
     </header>
 
     <div class="button-container">
-        <!-- Roosterknop verwijderd -->
-
+        <a href="/rooster" class="button">
+            <span>Rooster</span>
+            <img src="/images/rooster.png" alt="Rooster">
+        </a>
+        
         <!-- Voeg 'kktoe' rol toe aan de voorwaarde -->
         <% if (user && (user.role === 'administrator' || user.role === 'techniek' || user.role === 'kktoe')) { %>
             <a href="/openstaande-diensten" class="button">

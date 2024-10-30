@@ -1,6 +1,11 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #307a8d;
+    background-image: url('/images/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position-y: 1px;
     margin: 0;
     padding: 0;
     text-align: center;
@@ -16,8 +21,9 @@ h1 {
 
 header {
     background-color: #ffffff; /* Achtergrondkleur van de header */
-    padding: 5px 20px; /* Verminder de padding voor een dunnere header */
     display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
     align-items: center; /* Center de items verticaal */
     justify-content: flex-start; /* Laat de items aan de linkerkant beginnen */
     position: relative; /* Voor de positionering van de h1 */
@@ -42,6 +48,7 @@ header {
 .profile-pic {
     width: 50px; /* Grootte van de profielfoto */
     height: 50px;
+    padding-left: 10px;
     border-radius: 50%; /* Maak het rond */
     margin-right: 10px; /* Ruimte tussen foto en tekst */
 }
@@ -84,4 +91,9 @@ header {
 
 .button:hover {
     background-color: #e438f7;
+}
+
+footer {
+    color: #ffffff; /* Tekstkleur voor goede leesbaarheid */
+    text-align: center;
 }

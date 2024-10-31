@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/images/kktoe_logo_rond.png" type="image/png">
     <style>
-        /* Headerstijl */
         header {
             background-color: #ffffff;
             padding-top: 10px;
@@ -26,7 +25,6 @@
 
         .header-content h1 {
             margin-left: 20px;
-            margin: 0;
             font-size: 24px;
             color: #333;
         }
@@ -35,15 +33,30 @@
             padding: 20px;
             max-width: 1400px;
             margin: 20px auto;
+            background-color: transparent; /* Alleen de achtergrondcontainer onzichtbaar maken */
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-right: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container {
+            flex: 2;
+            padding: 20px;
+            background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            background-color: #f9f9f9;
         }
 
-        /* Formulierstijlen voor gebruikersbeheer */
-        form {
-            margin-bottom: 20px;
+        .flex-container {
+            display: flex;
         }
 
         label {
@@ -101,13 +114,6 @@
             color: white;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #ffffff;
-        }
-
-        /* Stijl voor verwijderen-knop */
         .verwijderen-knop {
             background-color: #dc3545;
         }
@@ -116,7 +122,6 @@
             background-color: #c82333;
         }
 
-        /* Foutmelding stijl */
         .error-message {
             color: #dc3545;
             margin-top: 5px;
@@ -136,81 +141,87 @@
     </header>
 
     <div class="gebruikers-container">
-        <!-- Formulier voor het aanmaken van een nieuwe gebruiker -->
-        <form id="gebruikerForm" action="/gebruiker-toevoegen" method="POST">
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Vul een geldig e-mailadres in.">
-            <div class="error-message" id="email-error"></div>
+        <div class="flex-container">
+            <!-- Linker container met het formulier -->
+            <div class="form-container">
+                <form id="gebruikerForm" action="/gebruiker-toevoegen" method="POST">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Vul een geldig e-mailadres in.">
+                    <div class="error-message" id="email-error"></div>
 
-            <label for="naam">Naam:</label>
-            <input type="text" id="naam" name="naam" required>
-            <div class="error-message" id="naam-error"></div>
+                    <label for="naam">Naam:</label>
+                    <input type="text" id="naam" name="naam" required>
+                    <div class="error-message" id="naam-error"></div>
 
-            <label for="telefoonnummer">Telefoonnummer:</label>
-            <input type="text" id="telefoonnummer" name="telefoonnummer" pattern="^\d{10}$" title="Vul een geldig telefoonnummer in (10 cijfers).">
-            <div class="error-message" id="telefoonnummer-error"></div>
+                    <label for="telefoonnummer">Telefoonnummer:</label>
+                    <input type="text" id="telefoonnummer" name="telefoonnummer" pattern="^\d{10}$" title="Vul een geldig telefoonnummer in (10 cijfers).">
+                    <div class="error-message" id="telefoonnummer-error"></div>
 
-            <label for="klas">Klas:</label>
-            <input type="text" id="klas" name="klas">
-            <div class="error-message" id="klas-error"></div>
+                    <label for="klas">Klas:</label>
+                    <input type="text" id="klas" name="klas">
+                    <div class="error-message" id="klas-error"></div>
 
-            <label for="role">Rol:</label>
-            <select id="role" name="role" required>
-                <option value="">Selecteer een optie</option>
-                <option value="administrator">Administrator</option>
-                <option value="techniek">Techniek</option>
-                <option value="kktoe">KKToe</option>
-            </select>
-            <div class="error-message" id="role-error"></div>
+                    <label for="role">Rol:</label>
+                    <select id="role" name="role" required>
+                        <option value="">Selecteer een optie</option>
+                        <option value="administrator">Administrator</option>
+                        <option value="techniek">Techniek</option>
+                        <option value="kktoe">KKToe</option>
+                    </select>
+                    <div class="error-message" id="role-error"></div>
 
-            <label for="coach">Coach:</label>
-            <input type="text" id="coach" name="coach">
-            <div class="error-message" id="coach-error"></div>
+                    <label for="coach">Coach:</label>
+                    <input type="text" id="coach" name="coach">
+                    <div class="error-message" id="coach-error"></div>
 
-            <label for="password">Wachtwoord:</label>
-            <input type="password" id="password" name="password" required>
-            <div class="error-message" id="password-error"></div>
+                    <label for="password">Wachtwoord:</label>
+                    <input type="password" id="password" name="password" required>
+                    <div class="error-message" id="password-error"></div>
 
-            <button type="submit">Gebruiker Toevoegen</button>
-        </form>        
+                    <button type="submit">Gebruiker Toevoegen</button>
+                </form>
+            </div>
 
-        <!-- Tabel met gebruikers -->
-        <h2>Bestaande Gebruikers</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Naam</th>
-                    <th>Email</th>
-                    <th>Telefoonnummer</th>
-                    <th>Rol</th>
-                    <th>Klas</th>
-                    <th>Coach</th>
-                    <th>Acties</th>
-                </tr>
-            </thead>
-            <tbody id="gebruikers-tabel">
-                <% if (users.length > 0) { %>
-                    <% users.forEach(function(gebruiker) { %>
-                        <tr id="gebruiker-<%= gebruiker.id %>">
-                            <td><%= gebruiker.naam %></td>
-                            <td><%= gebruiker.email %></td>
-                            <td><%= gebruiker.telefoonnummer || 'N/A' %></td>
-                            <td><%= gebruiker.role %></td>
-                            <td><%= gebruiker.klas || 'N/A' %></td>
-                            <td><%= gebruiker.coach %></td>
-                            <td>
-                                <button type="button" class="verwijderen-knop" onclick="verwijderGebruiker('<%= gebruiker.id %>')">Verwijderen</button>
-                                <a href="/gebruiker-bewerken/<%= gebruiker.id %>" class="actie-knop">Bewerken</a>
-                            </td>
+            <!-- Rechter container met de tabel -->
+            <div class="table-container">
+                <h2>Bestaande Gebruikers</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Naam</th>
+                            <th>Email</th>
+                            <th>Telefoonnummer</th>
+                            <th>Rol</th>
+                            <th>Klas</th>
+                            <th>Coach</th>
+                            <th>Acties</th>
                         </tr>
-                    <% }); %>
-                <% } else { %>
-                    <tr>
-                        <td colspan="7">Geen gebruikers gevonden</td>
-                    </tr>
-                <% } %>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody id="gebruikers-tabel">
+                        <% if (users.length > 0) { %>
+                            <% users.forEach(function(gebruiker) { %>
+                                <tr id="gebruiker-<%= gebruiker.id %>">
+                                    <td><%= gebruiker.naam %></td>
+                                    <td><%= gebruiker.email %></td>
+                                    <td><%= gebruiker.telefoonnummer || 'N/A' %></td>
+                                    <td><%= gebruiker.role %></td>
+                                    <td><%= gebruiker.klas || 'N/A' %></td>
+                                    <td><%= gebruiker.coach %></td>
+                                    <td>
+                                        <button type="button" class="verwijderen-knop" onclick="verwijderGebruiker('<%= gebruiker.id %>')">Verwijderen</button>
+                                        <a href="/gebruiker-bewerken/<%= gebruiker.id %>" class="actie-knop">Bewerken</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="7">Geen gebruikers gevonden</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <footer>
@@ -218,7 +229,6 @@
     </footer>
 
     <script>
-        // Functie om het formulier te verwerken via AJAX
         document.getElementById('gebruikerForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -246,12 +256,12 @@
                 }
             })
             .catch((error) => {
-                console.error('Fout:', error);
+                console.error
+                ('Fout:', error);
                 alert('Er is een fout opgetreden bij het verzenden van de gegevens.');
             });
         });
 
-        // Functie om gebruiker te verwijderen
         function verwijderGebruiker(id) {
             if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
                 fetch(`/gebruiker-verwijderen/${id}`, {

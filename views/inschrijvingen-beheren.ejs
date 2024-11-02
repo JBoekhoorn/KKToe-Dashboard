@@ -30,6 +30,10 @@
             color: #333; /* Donkerdere kleur voor de titel */
         }
 
+        .main-container {
+            display: flex;
+        }
+
         .inschrijvingen-container {
             padding: 20px;
             padding-top: 1px;
@@ -38,16 +42,21 @@
             border-radius: 12px; /* Ronde hoeken voor de container */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
             background-color: #f9f9f9; /* Achtergrondkleur van de container */
+            flex: 1;
+            max-height: 520px;
+            margin-top: 40px;
         }
 
         .bestaande-inschrijvingen-container {
             padding: 20px;
             padding-top:1px;
-            max-width: 1200px; /* Maximale breedte van de container */
+            max-width: 1300px; /* Maximale breedte van de container */
             margin: 20px auto; /* Centreren van de container */
             border-radius: 12px; /* Ronde hoeken voor de container */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
             background-color: #ffffff; /* Achtergrondkleur van de container */
+            flex: 2;
+            margin-top: 40px;
         }
 
         form {
@@ -166,10 +175,10 @@
                 <img src="/images/back.png" alt="Terug" class="profile-pic">
                 Terug naar Admin dashboard
             </a>
-            <h1>Nieuwe inschrijving aanmaken</h1>
+            <h1>Inschrijvingen beheren</h1>
         </div>
     </header>
-
+<div class="main-container">
     <div class="inschrijvingen-container">
         <h2>Nieuwe inschrijving</h2>
         <!-- Formulier voor het aanmaken van een nieuwe inschrijving -->
@@ -262,7 +271,7 @@
             </tbody>            
         </table>
     </div>
-
+</div>
     <footer>
         <p>© 2024 Mijn KKTOE. Alle rechten voorbehouden.</p>
     </footer>

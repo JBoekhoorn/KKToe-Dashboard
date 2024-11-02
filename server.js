@@ -168,26 +168,27 @@ app.post('/intekenen', checkRole(['techniek', 'kktoe', 'administrator']), async 
 
 // Route voor het bekijken van openstaande diensten
 app.get('/openstaande-diensten', async (req, res) => {
+    // Controleer of de gebruiker is ingelogd
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
     try {
-        // Controleer of de gebruiker is ingelogd
-        const user = req.session.user; // Zorg ervoor dat de user in de sessie zit
+        const user = req.session.user; // Haal de ingelogde gebruiker op
 
         // Haal alle openstaande diensten op (waar de user_id NULL is)
         const [results] = await db.query('SELECT * FROM diensten WHERE user_id IS NULL');
 
         // Format de tijden voor elke dienst
-        const formattedResults = results.map(dienst => {
-            return {
-                ...dienst,
-                aanvang: formatTime(dienst.aanvang),
-                einde: formatTime(dienst.einde)
-            };
-        });
+        const formattedResults = results.map(dienst => ({
+            ...dienst,
+            aanvang: formatTime(dienst.aanvang),
+            einde: formatTime(dienst.einde)
+        }));
 
-        // Controleer of de ingelogde gebruiker de rol 'kktoe' heeft
+        // Filter de resultaten op basis van de rol van de gebruiker (alleen KKTOE-diensten voor de rol 'kktoe')
         let filteredResults = formattedResults;
-        if (user && user.role === 'kktoe') {
-            // Filter diensten voor KKTOE-rol: alleen 'KKToe - Algemeen' en 'KKToe - Horeca'
+        if (user.role === 'kktoe') {
             filteredResults = formattedResults.filter(dienst => 
                 dienst.soort_dienst === 'KKToe - Algemeen' || dienst.soort_dienst === 'KKToe - Horeca'
             );
@@ -438,17 +439,22 @@ app.get('/inschrijvingen', (req, res) => {
         });
 });
 
-//Route voor het bekijken van alle inschrijvingen die zijn ingeschreven
+// Route voor het bekijken van alle ingeschreven diensten
 app.get('/ingeschreven-diensten', async (req, res) => {
+    // Controleer of de gebruiker is ingelogd
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
     try {
         const sql = `
-        SELECT diensten.id, diensten.datum, diensten.activiteit, diensten.soort_dienst, 
-               diensten.aanvang, diensten.einde, users.naam 
-        FROM diensten 
-        JOIN users ON diensten.user_id = users.id
-        WHERE diensten.user_id IS NOT NULL
-        ORDER BY diensten.datum ASC
-    `;    
+            SELECT diensten.id, diensten.datum, diensten.activiteit, diensten.soort_dienst, 
+                   diensten.aanvang, diensten.einde, users.naam 
+            FROM diensten 
+            JOIN users ON diensten.user_id = users.id
+            WHERE diensten.user_id IS NOT NULL
+            ORDER BY diensten.datum ASC
+        `;
 
         const [results] = await db.query(sql);
         res.render('ingeschreven-diensten', { diensten: results });
@@ -460,6 +466,11 @@ app.get('/ingeschreven-diensten', async (req, res) => {
 
 // Route om inschrijvingen te beheren
 app.get('/inschrijvingen-beheren', async (req, res) => {
+    // Controleer of de gebruiker is ingelogd
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
     try {
         // SQL-query om alle inschrijvingen op te halen
         const [results] = await db.query('SELECT id, datum, activiteit, soort_dienst, aanvang, einde FROM diensten');
@@ -510,23 +521,22 @@ app.post('/inschrijvingen-verwijderen', async (req, res) => {
 
 // Route voor het bekijken van het volledige rooster
 app.get('/rooster', async (req, res) => {
+    // Controleer of de gebruiker is ingelogd
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
     try {
         // Verbind met de database en haal diensten op
         const result = await db.query('SELECT id, user_id, datum, activiteit, soort_dienst, aanvang, einde FROM diensten');
-        
-        // Log het volledige resultaat om te begrijpen hoe het is gestructureerd
-        console.log(result);
 
         // Neem alleen de eerste array met rijen
-        const diensten = result[0]; // Dit haalt de eerste array (de rijen) uit het resultaat
+        const diensten = result[0];
 
         // Controleer of er resultaten zijn
         if (!diensten || diensten.length === 0) {
             throw new Error("Geen rijen gevonden in het resultaat.");
         }
-
-        // Log de opgehaalde rijen naar de console
-        console.log(diensten); 
 
         // Format de tijden voor elke dienst
         const formattedDiensten = diensten.map(dienst => ({

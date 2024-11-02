@@ -32,11 +32,22 @@
 
         .inschrijvingen-container {
             padding: 20px;
-            max-width: 1200px; /* Maximale breedte van de container */
+            padding-top: 1px;
+            max-width: 300px; /* Maximale breedte van de container */
             margin: 20px auto; /* Centreren van de container */
             border-radius: 12px; /* Ronde hoeken voor de container */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
             background-color: #f9f9f9; /* Achtergrondkleur van de container */
+        }
+
+        .bestaande-inschrijvingen-container {
+            padding: 20px;
+            padding-top:1px;
+            max-width: 1200px; /* Maximale breedte van de container */
+            margin: 20px auto; /* Centreren van de container */
+            border-radius: 12px; /* Ronde hoeken voor de container */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
+            background-color: #ffffff; /* Achtergrondkleur van de container */
         }
 
         form {
@@ -160,6 +171,7 @@
     </header>
 
     <div class="inschrijvingen-container">
+        <h2>Nieuwe inschrijving</h2>
         <!-- Formulier voor het aanmaken van een nieuwe inschrijving -->
         <form id="inschrijvingForm" action="/inschrijving-toevoegen" method="POST">
             <label for="activiteit">Activiteit:</label>
@@ -186,7 +198,9 @@
         
             <button type="submit">Inschrijving Toevoegen</button>
         </form>
+        </div>
 
+        <div class="bestaande-inschrijvingen-container">
         <!-- Tabel met inschrijvingen -->
         <h2>Bestaande Inschrijvingen</h2>
         <table>

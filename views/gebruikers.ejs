@@ -31,7 +31,7 @@
 
         .gebruikers-container {
             padding: 20px;
-            max-width: 1400px;
+            max-width: 1700px;
             margin: 20px auto;
             background-color: transparent; /* Alleen de achtergrondcontainer onzichtbaar maken */
         }
@@ -39,6 +39,7 @@
         .form-container {
             flex: 1;
             padding: 20px;
+            padding-top: 1px;
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -49,10 +50,12 @@
         .table-container {
             flex: 2;
             padding: 20px;
+            padding-top: 1px;
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            min-width: 1300px;
         }
 
         .flex-container {
@@ -96,22 +99,38 @@
 
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate; /* Scheiding tussen de cellen */
+            border-spacing: 0; /* Geen extra ruimte tussen cellen */
             margin-top: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd; /* Rand om de tabel */
+            border-radius: 12px; /* Ronde hoeken voor de tabel */
+            overflow: hidden; /* Zorg ervoor dat de hoeken goed afgerond blijven */
         }
 
         th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
+            border-bottom: 1px solid #ddd; /* Rand onder de cellen */
+            padding: 12px; /* Padding binnen de cellen */
+            text-align: left; /* Centreer de tekst */
         }
 
         th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #4CAF50; /* Achtergrondkleur van de header */
+            color: white; /* Kleur van de tekst in de header */
+            font-size: 16px; /* Grotere tekst voor de header */
+            text-align: center;
+        }
+
+        tr:last-child td {
+            border-bottom: none; /* Geen onderrand voor de laatste rij */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Achtergrondkleur voor even rijen */
+        }
+
+        td {
+            background-color: white; /* Achtergrondkleur voor de cellen */
+            font-size: 14px; /* Tekstgrootte voor de cellen */
         }
 
         .verwijderen-knop {
@@ -144,6 +163,7 @@
         <div class="flex-container">
             <!-- Linker container met het formulier -->
             <div class="form-container">
+                <h2>Nieuwe gebruiker</h2>
                 <form id="gebruikerForm" action="/gebruiker-toevoegen" method="POST">
                     <label for="email">Email:</label>
                     <input type="text" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Vul een geldig e-mailadres in.">

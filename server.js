@@ -126,7 +126,14 @@ app.get('/dashboard', (req, res) => {
 });
 
 // Route voor het admin dashboard
-app.get('/admin-dashboard', checkRole(['administrator']), (req, res) => {
+app.get('/admin-dashboard', async (req, res, next) => {
+    // Controleer of de gebruiker is ingelogd
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+    // Ga door naar de volgende middleware voor rolcontrole
+    next();
+}, checkRole(['administrator']), (req, res) => {
     res.render('admin-dashboard', { title: 'Admin Dashboard' });
 });
 
@@ -328,7 +335,14 @@ app.post('/diensten/verwijderen/:id', (req, res) => {
 });
 
 // Route voor het bekijken van gebruikers
-app.get('/gebruikers', checkRole(['administrator']), async (req, res) => {
+app.get('/gebruikers', async (req, res, next) => {
+    // Controleer of de gebruiker is ingelogd
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+    // Ga door naar de volgende middleware voor rolcontrole
+    next();
+}, checkRole(['administrator']), async (req, res) => {
     try {
         const [users] = await db.query('SELECT * FROM users');
         res.render('gebruikers', { users });

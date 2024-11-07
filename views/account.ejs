@@ -112,30 +112,30 @@
     <div class="gegevens-container">
         <section class="user-info">
             <h2>Persoonlijke Informatie</h2>
-            <form action="/dashboard" method="POST">
+            <form action="/account" method="POST">
                 <label for="username">Naam:</label>
                 <input type="text" id="username" name="username" value="<%= user.naam %>" disabled>
-
+            
                 <label for="class">Klas:</label>
                 <input type="text" id="class" name="klas" value="<%= user.klas %>" required>
-
+            
                 <label for="teacher">Coach:</label>
                 <input type="text" id="teacher" name="teacher" value="<%= user.coach %>" required>
-
+            
                 <label for="email">E-mail:</label>
                 <input type="email" id="email" name="email" value="<%= user.email %>" required>
-
+            
                 <label for="phone">Telefoonnummer:</label>
                 <input type="tel" id="phone" name="phone" value="<%= user.telefoonnummer %>">
-
+            
                 <label for="password">Nieuw wachtwoord (optioneel):</label>
                 <div style="position: relative;">
-                    <input type="password" id="password" name="password" placeholder="Typ een nieuw wachtwoord...">
+                    <input type="password" id="password" name="password" placeholder="Typ een nieuw wachtwoord..." value="">
                     <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
                 </div>
-
+            
                 <button type="submit">Wijzigingen opslaan</button>
-            </form>
+            </form>            
         </section>
 
         <section class="logout">

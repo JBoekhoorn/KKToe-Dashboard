@@ -33,7 +33,7 @@
             padding: 20px;
             max-width: 1700px;
             margin: 20px auto;
-            background-color: transparent; /* Alleen de achtergrondcontainer onzichtbaar maken */
+            background-color: transparent;
         }
 
         .form-container {
@@ -99,38 +99,38 @@
 
         table {
             width: 100%;
-            border-collapse: separate; /* Scheiding tussen de cellen */
-            border-spacing: 0; /* Geen extra ruimte tussen cellen */
+            border-collapse: separate;
+            border-spacing: 0;
             margin-top: 20px;
-            border: 1px solid #ddd; /* Rand om de tabel */
-            border-radius: 12px; /* Ronde hoeken voor de tabel */
-            overflow: hidden; /* Zorg ervoor dat de hoeken goed afgerond blijven */
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         th, td {
-            border-bottom: 1px solid #ddd; /* Rand onder de cellen */
-            padding: 12px; /* Padding binnen de cellen */
-            text-align: left; /* Centreer de tekst */
+            border-bottom: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
         }
 
         th {
-            background-color: #4CAF50; /* Achtergrondkleur van de header */
-            color: white; /* Kleur van de tekst in de header */
-            font-size: 16px; /* Grotere tekst voor de header */
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
             text-align: center;
         }
 
         tr:last-child td {
-            border-bottom: none; /* Geen onderrand voor de laatste rij */
+            border-bottom: none;
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2; /* Achtergrondkleur voor even rijen */
+            background-color: #f2f2f2;
         }
 
         td {
-            background-color: white; /* Achtergrondkleur voor de cellen */
-            font-size: 14px; /* Tekstgrootte voor de cellen */
+            background-color: white;
+            font-size: 14px;
         }
 
         .verwijderen-knop {
@@ -161,7 +161,6 @@
 
     <div class="gebruikers-container">
         <div class="flex-container">
-            <!-- Linker container met het formulier -->
             <div class="form-container">
                 <h2>Nieuwe gebruiker</h2>
                 <form id="gebruikerForm" action="/gebruiker-toevoegen" method="POST">
@@ -202,7 +201,6 @@
                 </form>
             </div>
 
-            <!-- Rechter container met de tabel -->
             <div class="table-container">
                 <h2>Bestaande Gebruikers</h2>
                 <table>
@@ -249,57 +247,26 @@
     </footer>
 
     <script>
-        document.getElementById('gebruikerForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
-
-            fetch('/gebruiker-toevoegen', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Netwerkrespons was niet ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Er is een fout opgetreden: ' + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error
-                ('Fout:', error);
-                alert('Er is een fout opgetreden bij het verzenden van de gegevens.');
-            });
-        });
-
         function verwijderGebruiker(id) {
+            console.log('Verwijder gebruiker functie aangeroepen voor id:', id);  // Logging toegevoegd
             if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
                 fetch(`/gebruiker-verwijderen/${id}`, {
                     method: 'DELETE'
                 })
                 .then(response => {
                     if (response.ok) {
+                        console.log(`Gebruiker met id ${id} succesvol verwijderd`);
                         const gebruikerRow = document.getElementById(`gebruiker-${id}`);
                         if (gebruikerRow) {
                             gebruikerRow.remove();
                         }
                     } else {
-                        alert('Er is een fout opgetreden bij het verwijderen van de gebruiker.');
+                        alert('Er is een fout opgetreden bij het verwijderen.');
                     }
                 })
-                .catch((error) => {
-                    console.error('Fout:', error);
-                    alert('Er is een fout opgetreden bij het verwijderen van de gebruiker.');
+                .catch(err => {
+                    console.error('Fout bij het verzenden van de DELETE-aanroep:', err);
+                    alert('Er is een fout opgetreden bij het verwijderen.');
                 });
             }
         }

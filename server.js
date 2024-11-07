@@ -393,35 +393,63 @@ app.get('/account', (req, res) => {
         });
 });
 
-// Route voor het bewerken van persoonlijke gegevens
-app.post('/account', (req, res) => {
-    const userId = req.session.user.id;
-    const { email, wachtwoord } = req.body;
+// Route voor het bijwerken van gebruikersgegevens
+app.post('/account', async (req, res) => {
+    const userId = req.session.user.id; // Verkrijg het gebruikers-ID uit de sessie
+    const { email, wachtwoord, klas, teacher, phone } = req.body;
 
-    // Update query, inclusief wachtwoord hashing als een nieuw wachtwoord is opgegeven
-    const updateQuery = 'UPDATE users SET email = ? WHERE id = ?';
-    const queryParams = [email, userId];
+    // Log de ontvangen gegevens voor debugging
+    console.log('Ontvangen formuliergegevens:', req.body);
 
-    if (wachtwoord) {
-        bcrypt.hash(wachtwoord, 10, (err, hashedPassword) => {
-            if (err) {
-                return res.status(500).json({ message: 'Er ging iets mis bij het hash-en van het wachtwoord.' });
+    try {
+        // Haal de huidige gegevens van de gebruiker op (inclusief het wachtwoord)
+        const userQuery = 'SELECT password FROM users WHERE id = ?';  // Gebruik 'password' in plaats van 'wachtwoord'
+        const userResult = await db.query(userQuery, [userId]);
+        const currentPassword = userResult[0]?.password;  // Verkrijg het huidige wachtwoord
+        console.log('Huidig wachtwoord uit de database:', currentPassword);
+
+        // Start met de basisupdatequery zonder het wachtwoord
+        let updateQuery = 'UPDATE users SET email = ?, klas = ?, coach = ?, telefoonnummer = ? WHERE id = ?';
+        let queryParams = [email, klas, teacher, phone, userId];
+
+        // Als er een nieuw wachtwoord is ingevuld, moet dit worden gehashed en toegevoegd aan de query
+        if (wachtwoord) {
+            console.log('Nieuw wachtwoord ingevoerd:', wachtwoord);
+
+            // Vergelijk het huidige wachtwoord met het ingevoerde wachtwoord
+            const isMatch = await bcrypt.compare(wachtwoord, currentPassword);
+            if (isMatch) {
+                console.log('Het ingevoerde wachtwoord is hetzelfde als het huidige wachtwoord. Geen wijziging.');
+                return res.redirect('/account');  // Geen update uitvoeren als het wachtwoord niet veranderd is
             }
-            queryParams.push(hashedPassword);
-            db.query(updateQuery, queryParams)
-                .then(() => res.redirect('/account'))
-                .catch(err => {
-                    console.error('Fout bij het updaten van gebruikersgegevens:', err);
-                    res.status(500).json({ message: 'Er is iets misgegaan bij het updaten van de gegevens.' });
-                });
-        });
-    } else {
-        db.query(updateQuery, queryParams)
-            .then(() => res.redirect('/account'))
-            .catch(err => {
-                console.error('Fout bij het updaten van gebruikersgegevens:', err);
-                res.status(500).json({ message: 'Er is iets misgegaan bij het updaten van de gegevens.' });
-            });
+
+            // Hash het wachtwoord
+            const hashedPassword = await bcrypt.hash(wachtwoord, 10);
+            console.log('Gehashed wachtwoord:', hashedPassword); // Log het gehashte wachtwoord voor debugging
+
+            // Voeg het gehashte wachtwoord toe aan de updatequery
+            updateQuery = 'UPDATE users SET email = ?, klas = ?, coach = ?, telefoonnummer = ?, password = ? WHERE id = ?';  // Gebruik 'password' in plaats van 'wachtwoord'
+            queryParams = [email, klas, teacher, phone, hashedPassword, userId];
+
+            console.log('Update query voor wachtwoord:', updateQuery);
+            console.log('Query parameters voor wachtwoord:', queryParams);
+        }
+
+        // Voer de update query uit
+        const result = await db.query(updateQuery, queryParams); // Gebruik await om ervoor te zorgen dat de query wordt uitgevoerd
+
+        console.log('Query uitvoer:', result);  // Log de uitvoer van de query
+
+        if (result && result.affectedRows > 0) {
+            console.log('Gebruikersgegevens succesvol bijgewerkt.');
+        } else {
+            console.log('Geen wijziging aangebracht in de gebruikersgegevens.');
+        }
+
+        res.redirect('/account');
+    } catch (err) {
+        console.error('Fout bij het updaten van gebruikersgegevens:', err);
+        res.status(500).json({ message: 'Er is iets misgegaan bij het updaten van de gegevens.' });
     }
 });
 
@@ -567,8 +595,8 @@ app.get('/rooster', async (req, res) => {
     }
 });
 
-// Route voor het toevoegen van een nieuwe gebruiker
-app.post('/gebruikers/toevoegen', async (req, res) => {
+// Server route voor het toevoegen van een nieuwe gebruiker
+app.post('/gebruiker-toevoegen', async (req, res) => {
     const { email, naam, telefoonnummer, klas, role, coach, password } = req.body;
 
     // Validatie van invoer
@@ -590,11 +618,35 @@ app.post('/gebruikers/toevoegen', async (req, res) => {
         await db.query('INSERT INTO users (email, naam, telefoonnummer, klas, role, coach, password) VALUES (?, ?, ?, ?, ?, ?, ?)', 
             [email, naam, telefoonnummer, klas, role, coach, hashedPassword]);
 
+        // Stuur een succesbericht terug
         res.status(201).json({ success: true, message: 'Gebruiker succesvol toegevoegd.' });
     } catch (err) {
         console.error('Fout bij het toevoegen van gebruiker:', err);
         res.status(500).json({ success: false, message: 'Er is een fout opgetreden bij het toevoegen van de gebruiker.' });
     }
+});
+
+// Route om een gebruiker te verwijderen
+router.delete('/gebruiker-verwijderen/:id', (req, res) => {
+    const gebruikerId = req.params.id;
+    console.log(`Verwijdering aangevraagd voor gebruiker met id: ${gebruikerId}`);
+
+    // Verwijder gebruiker uit de tabel 'users'
+    const query = 'DELETE FROM users WHERE id = ?';
+
+    db.query(query, [gebruikerId], (err, results) => {
+        if (err) {
+            console.error('Fout bij verwijderen gebruiker:', err);
+            return res.status(500).send('Er is een fout opgetreden bij het verwijderen van de gebruiker.');
+        }
+
+        console.log(`Aantal verwijderde rijen: ${results.affectedRows}`);
+        if (results.affectedRows > 0) {
+            res.status(200).send('Gebruiker succesvol verwijderd');
+        } else {
+            res.status(404).send('Gebruiker niet gevonden');
+        }
+    });
 });
 
 // Luister op de opgegeven poort

@@ -216,25 +216,33 @@
                 document.body.innerHTML = originalContent;
             }
 
-            function removeDienst(dienstId) {
-                if (confirm("Weet je zeker dat je je wilt uitschrijven voor deze dienst?")) {
-                    fetch(`/diensten/verwijderen/${dienstId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Er is iets misgegaan bij het uitschrijven.');
-                        }
-                        location.reload(); 
-                    })
-                    .catch(error => {
-                        alert(error.message);
-                    });
-                }
+function removeDienst(dienstId) {
+    if (confirm("Weet je zeker dat je je wilt uitschrijven voor deze dienst?")) {
+        fetch(`/diensten/verwijderen/${dienstId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status} ${response.statusText}`);
+            }
+            return response.json(); // Veronderstelt dat de server een JSON-antwoord stuurt
+        })
+        .then(data => {
+            if (data.success) { // Controleer of de server bevestigt dat het gelukt is
+                location.reload();
+            } else {
+                throw new Error(data.message || 'Er is iets misgegaan bij het uitschrijven.');
+            }
+        })
+        .catch(error => {
+            console.error("Fetch error:", error);
+            alert("Er is een fout opgetreden bij het uitschrijven. Probeer het opnieuw.");
+        });
+    }
+}
 
             function addToCalendar(activiteit, datum, aanvang, einde) {
     try {
